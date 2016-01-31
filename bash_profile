@@ -1,7 +1,8 @@
 # Import brew completions
 source `brew --prefix`/etc/bash_completion.d/git-completion.bash
-source `brew --prefix`/etc/bash_completion.d/vagrant
 source `brew --prefix`/etc/bash_completion.d/npm
+source `brew --prefix`/etc/bash_completion.d/pandoc
+source `brew --prefix`/etc/bash_completion.d/vagrant
 
 
 # Configure
