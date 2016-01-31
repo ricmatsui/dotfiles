@@ -48,11 +48,11 @@
 
 - Misc shortcuts
 
-| Alias     | Expansion                                           |
-|-----------|-----------------------------------------------------|
-| `grer`    | `grep -R`                                           |
-| `lsa`     | `ls -ahl`                                           |
-| pandocmd` | `pandoc -V geometry:margin=1in -V fontsize=12pt -o` |
+| Alias      | Expansion                                           |
+|------------|-----------------------------------------------------|
+| `grer`     | `grep -R`                                           |
+| `lsa`      | `ls -ahl`                                           |
+| `pandocmd` | `pandoc -V geometry:margin=1in -V fontsize=12pt -o` |
 
 
 ## vim
