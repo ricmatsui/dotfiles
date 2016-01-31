@@ -117,7 +117,7 @@ Add `source <path-to-repo>/vimrc` to your `~/.vimrc`
 | `\gd`           | Git diff                                         |
 | `\gp`           | Git push                                         |
 | `\gs`           | Git status                                       |
-| `\jd`           | Go to definition                                 |
+| `\jd`           | Jump to definition                               |
 | `\n`            | Go to next error                                 |
 | `\rt`           | Toggle rainbow matching characters highlighting  |
 | `\sc`           | Run syntax check, `:Errors` to list all errors   |
