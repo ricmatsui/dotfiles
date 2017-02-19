@@ -5,6 +5,15 @@ set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
 Plugin 'gmarik/Vundle.vim'
 
+Plugin 'junkblocker/unite-tasklist'
+Plugin 'sjl/gundo.vim'
+Plugin 'Shougo/neomru.vim'
+Plugin 'Shougo/vimproc.vim'
+Plugin 'andrewradev/splitjoin.vim'
+Plugin 'terryma/vim-multiple-cursors'
+Plugin 'junegunn/vim-easy-align'
+Plugin 'Shougo/unite.vim'
+Plugin 'tpope/vim-vinegar'
 Plugin '907th/vim-auto-save'
 Plugin 'airblade/vim-gitgutter'
 Plugin 'derekwyatt/vim-scala'
@@ -19,7 +28,6 @@ Plugin 'ricmatsui/vim-airline'
 Plugin 'rking/ag.vim'
 Plugin 'rosenfeld/conque-term'
 Plugin 'scrooloose/nerdcommenter'
-Plugin 'scrooloose/nerdtree'
 Plugin 'scrooloose/syntastic'
 Plugin 'tpope/vim-fugitive'
 Plugin 'tpope/vim-sleuth'
@@ -28,17 +36,20 @@ Plugin 'vim-scripts/DoxygenToolkit.vim'
 Plugin 'vim-scripts/a.vim'
 Plugin 'vim-scripts/gdbmgr'
 Plugin 'vim-scripts/restart.vim'
-"Plugin 'xolox/vim-misc'
-"Plugin 'xolox/vim-session'"
+Plugin 'tpope/vim-surround'
+Plugin 'AndrewRadev/switch.vim'
+Plugin 'keith/swift.vim'
 call vundle#end()
 filetype plugin indent on
-
 
 colorscheme jellybeans
 
 set autoindent
 set spell
 
+set linebreak
+set shortmess+=I
+set scrolloff=10
 
 " Use system clipboard
 set clipboard=unnamedplus
@@ -61,7 +72,6 @@ let os=substitute(system('uname'), '\n', '', '')
 if os == 'Darwin' || os == 'Mac'
   :set guifont=Meslo\ LG\ S\ DZ\ for\ Powerline:h12
 endif
-
 
 " Set vim airline to clean dividers
 if !exists('g:airline_symbols')
@@ -90,6 +100,41 @@ let g:airline#extensions#default#layout = [
       \ [ 'a', 'b', 'c' ],
       \ [ 'z', 'warning' ]
       \ ]
+
+
+" Easy align text
+" ga - Start Easy Align
+xmap ga <Plug>(EasyAlign)
+nmap ga <Plug>(EasyAlign)
+
+
+" Configure Unite
+" gj - Find file
+" gl - Find line
+call unite#filters#matcher_default#use(['matcher_fuzzy'])
+
+let g:unite_source_alias_aliases = {}
+let g:unite_source_alias_aliases.line_fuzzy = 'line'
+let g:unite_source_alias_aliases.grep_git_fuzzy = 'grep/git'
+
+call unite#custom#source('line_fuzzy', 'matchers', 'matcher_fuzzy')
+call unite#custom#source('grep_git_fuzzy', 'matchers', 'matcher_fuzzy')
+
+nmap gj :<C-u>Unite -start-insert -no-split -ignorecase tasklist buffer neomru/file neomru/directory<CR>
+nmap gl :<C-u>Unite -start-insert -no-split -ignorecase line_fuzzy<CR>
+
+
+" Configure Gundo
+" \u - Open undo viewer
+nnoremap <leader>u :GundoToggle<CR>
+let g:gundo_preview_bottom = 1
+let g:gundo_help = 0
+
+
+" Configure Netrw
+" - - Open Netrw
+let g:netrw_bufsettings = 'noma nomod rnu nowrap ro nobl'
+let g:netrw_localcopycmd = 'cp'
 
 
 " Map Tab to switch buffers
@@ -125,19 +170,30 @@ nmap <leader>f za
 set grepprg=ag\ --nogroup\ --nocolor
 
 
+" _ - Swap between true and false, etc.
+let g:switch_mapping = "_"
+
+
 " Configure Ctrl-P use the repo as the root directory, and use
-" Ag for searching
+" Ag for searching. Show results at the top
+" Ctrl-P - Open file finder
+" Ctrl-U - Open MRU file finder
 let g:ctrlp_working_path_mode = 'cr'
 let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
+let g:ctrlp_match_window_bottom = 0
+nn <silent> <c-u> :<c-u>CtrlPMRU<CR>
 
 
-" Enable passive syntax checking, use JSX hint
-" \sc - Run syntax check
+" Enable passive syntax checking, use ESLint
+" \a - Run syntax check
 " :Errors to show list of errors
-let g:syntastic_javascript_checkers = ['jsxhint']
 let g:syntastic_mode_map = { 'mode': 'passive' }
+let g:syntastic_javascript_checkers = ['eslint']
+let g:syntastic_javascript_eslint_exec = 'eslint_d'
+
 let g:syntastic_always_populate_loc_list = 1
-nmap <leader>sc :SyntasticCheck<CR>
+let g:syntastic_auto_loc_list = 1
+nmap <leader>a :SyntasticCheck<CR>
 
 
 " Auto save when entering normal mode only
@@ -218,9 +274,12 @@ let g:ycm_confirm_extra_conf = 0
 nnoremap <leader>jd :YcmCompleter GoTo<CR>
 
 
-" Configure NERDTree, hide help, ignore files
-autocmd StdinReadPre * let s:std_in=1
-autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
-autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | endif
-:let g:NERDTreeMinimalUI = 1
-let NERDTreeIgnore=['.pyc$', '\~$']
+" Bookmarks
+highlight BookmarkLine term=reverse cterm=reverse gui=reverse
+highlight BookmarkAnnotationLine term=reverse cterm=reverse gui=reverse
+let g:bookmark_highlight_lines = 1
+
+
+" Fast replace all occurrences of word under cursor
+" \S - Start find and replace all
+:nnoremap <Leader>S :%s/\<<C-r><C-w>\>/
