@@ -13,7 +13,6 @@ Plugin 'andrewradev/splitjoin.vim'
 Plugin 'terryma/vim-multiple-cursors'
 Plugin 'junegunn/vim-easy-align'
 Plugin 'Shougo/unite.vim'
-Plugin 'tpope/vim-vinegar'
 Plugin '907th/vim-auto-save'
 Plugin 'airblade/vim-gitgutter'
 Plugin 'derekwyatt/vim-scala'
@@ -39,6 +38,12 @@ Plugin 'vim-scripts/restart.vim'
 Plugin 'tpope/vim-surround'
 Plugin 'AndrewRadev/switch.vim'
 Plugin 'keith/swift.vim'
+Plugin 'ekalinin/Dockerfile.vim'
+Plugin 'wellle/targets.vim'
+Plugin 'ruanyl/vim-gh-line'
+Plugin 'justinmk/vim-dirvish'
+Plugin 'pangloss/vim-javascript'
+Plugin 'mxw/vim-jsx'
 call vundle#end()
 filetype plugin indent on
 
@@ -50,6 +55,8 @@ set spell
 set linebreak
 set shortmess+=I
 set scrolloff=10
+
+runtime macros/matchit.vim
 
 " Use system clipboard
 set clipboard=unnamedplus
@@ -190,6 +197,7 @@ nn <silent> <c-u> :<c-u>CtrlPMRU<CR>
 let g:syntastic_mode_map = { 'mode': 'passive' }
 let g:syntastic_javascript_checkers = ['eslint']
 let g:syntastic_javascript_eslint_exec = 'eslint_d'
+let g:syntastic_ruby_rubocop_exec = '/Users/ricardo/.rbenv/shims/rubocop'
 
 let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_auto_loc_list = 1
@@ -283,3 +291,23 @@ let g:bookmark_highlight_lines = 1
 " Fast replace all occurrences of word under cursor
 " \S - Start find and replace all
 :nnoremap <Leader>S :%s/\<<C-r><C-w>\>/
+
+
+" GitHub integration
+let g:gh_line_map_default = 0
+let g:gh_line_map = '<leader>o'
+
+
+" Snippets
+let @p = "Obinding.pry"
+let @f = "O# frozen_string_literal: truej^i"
+let @v = "o# vim: ts=4 sw=4 sts=4 sr et	\	"
+
+
+" Git Gutter settings
+set signcolumn=yes
+let g:gitgutter_realtime = 0
+let g:gitgutter_eager = 0
+
+" Dirvish disable spell check
+autocmd FileType dirvish setlocal nospell
