@@ -1,6 +1,5 @@
 # Import brew completions
 source `brew --prefix`/etc/bash_completion.d/git-completion.bash
-source `brew --prefix`/etc/bash_completion.d/npm
 source `brew --prefix`/etc/bash_completion.d/pandoc
 source `brew --prefix`/etc/bash_completion.d/vagrant
 
@@ -11,6 +10,7 @@ export HISTCONTROL=ignorespace
 export LSCOLORS=GxFxCxDxBxegedabagaced
 export PS1="\W\$ "
 
+export REACT_EDITOR=mvim
 
 # NVM support
 export NVM_DIR="~/.nvm"
@@ -22,6 +22,9 @@ function tabname {
   printf "\e]1;$1\a"
 }
 
+function ec2-ssh () {
+  ssh $1@$(aws ec2 describe-instances --region us-east-1 --filter Name=instance-id,Values=$2 | jq '.Reservations[0].Instances[0].PublicIpAddress' | tr -d '"')
+}
 
 # Shortcuts
 
@@ -90,3 +93,11 @@ alias fswp='find . -name "*.swp" -o -name "*.swo"'
 alias rn='react-native'
 
 alias pandocmd='pandoc -V geometry:margin=1in -V fontsize=12pt -o '
+
+alias r='bundle exec rake'
+
+alias es='ec2-ssh ec2-user'
+
+alias dockerenter='docker run -it --privileged --pid=host debian nsenter -t 1 -m -u -n -i sh'
+
+alias wiresharkstart="docker run --rm -ti --net=host --privileged -v $HOME:/root:ro -e XAUTHORITY=/root/.Xauthority -e DISPLAY='192.168.1.119:0' manell/wireshark"
