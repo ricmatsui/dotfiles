@@ -20,7 +20,6 @@ Plugin 'matze/vim-move'
 Plugin 'mbbill/code_complete'
 Plugin 'nanotech/jellybeans.vim'
 Plugin 'ricmatsui/vim-airline'
-Plugin 'rking/ag.vim'
 Plugin 'scrooloose/nerdcommenter'
 Plugin 'scrooloose/syntastic'
 Plugin 'tpope/vim-fugitive'
@@ -39,6 +38,7 @@ Plugin 'ruanyl/vim-gh-line'
 Plugin 'justinmk/vim-dirvish'
 Plugin 'pangloss/vim-javascript'
 Plugin 'mxw/vim-jsx'
+Plugin 'mhinz/vim-grepper'
 call vundle#end()
 filetype plugin indent on
 
@@ -289,3 +289,9 @@ autocmd FileType dirvish setlocal nospell
 
 " Use login profile for :terminal
 set shell=bash\ -l
+
+
+nnoremap <leader>F :Grepper<cr>
+let g:grepper = { 'next_tool': '<leader>F' }
+nmap gs  <plug>(GrepperOperator)
+xmap gs  <plug>(GrepperOperator)
