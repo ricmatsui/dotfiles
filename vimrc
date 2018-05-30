@@ -21,7 +21,6 @@ Plugin 'mbbill/code_complete'
 Plugin 'nanotech/jellybeans.vim'
 Plugin 'ricmatsui/vim-airline'
 Plugin 'scrooloose/nerdcommenter'
-Plugin 'scrooloose/syntastic'
 Plugin 'tpope/vim-fugitive'
 Plugin 'tpope/vim-sleuth'
 Plugin 'Valloric/YouCompleteme'
@@ -39,6 +38,7 @@ Plugin 'justinmk/vim-dirvish'
 Plugin 'pangloss/vim-javascript'
 Plugin 'mxw/vim-jsx'
 Plugin 'mhinz/vim-grepper'
+Plugin 'w0rp/ale'
 call vundle#end()
 filetype plugin indent on
 
@@ -170,19 +170,6 @@ let g:ctrlp_match_window_bottom = 0
 nn <silent> <c-u> :<c-u>CtrlPMRU<CR>
 
 
-" Enable passive syntax checking, use ESLint
-" \a - Run syntax check
-" :Errors to show list of errors
-let g:syntastic_mode_map = { 'mode': 'passive' }
-let g:syntastic_javascript_checkers = ['eslint']
-let g:syntastic_javascript_eslint_exec = 'eslint_d'
-let g:syntastic_ruby_rubocop_exec = '/Users/ricardo/.rbenv/shims/rubocop'
-
-let g:syntastic_always_populate_loc_list = 1
-let g:syntastic_auto_loc_list = 1
-nmap <leader>a :SyntasticCheck<CR>
-
-
 " Auto save when entering normal mode only
 let g:auto_save = 1
 let g:auto_save_in_insert_mode = 0
@@ -295,3 +282,9 @@ nnoremap <leader>F :Grepper<cr>
 let g:grepper = { 'next_tool': '<leader>F' }
 nmap gs  <plug>(GrepperOperator)
 xmap gs  <plug>(GrepperOperator)
+
+
+let g:ale_linters = {
+\   'javascript': ['eslint'],
+\}
+nmap <leader>a <Plug>(ale_next_wrap)
