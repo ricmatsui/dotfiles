@@ -5,27 +5,22 @@ set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
 Plugin 'gmarik/Vundle.vim'
 
-Plugin 'junkblocker/unite-tasklist'
 Plugin 'sjl/gundo.vim'
-Plugin 'Shougo/neomru.vim'
 Plugin 'Shougo/vimproc.vim'
 Plugin 'andrewradev/splitjoin.vim'
 Plugin 'terryma/vim-multiple-cursors'
 Plugin 'junegunn/vim-easy-align'
-Plugin 'Shougo/unite.vim'
 Plugin '907th/vim-auto-save'
 Plugin 'airblade/vim-gitgutter'
 Plugin 'derekwyatt/vim-scala'
 Plugin 'dhruvasagar/vim-table-mode'
 Plugin 'jlanzarotta/bufexplorer'
-Plugin 'kien/ctrlp.vim'
-Plugin 'luochen1990/rainbow'
+Plugin 'ctrlpvim/ctrlp.vim'
 Plugin 'matze/vim-move'
 Plugin 'mbbill/code_complete'
 Plugin 'nanotech/jellybeans.vim'
 Plugin 'ricmatsui/vim-airline'
 Plugin 'rking/ag.vim'
-Plugin 'rosenfeld/conque-term'
 Plugin 'scrooloose/nerdcommenter'
 Plugin 'scrooloose/syntastic'
 Plugin 'tpope/vim-fugitive'
@@ -58,8 +53,13 @@ set scrolloff=10
 
 runtime macros/matchit.vim
 
-" Use system clipboard
-set clipboard=unnamedplus
+
+" Use system clipboard - https://stackoverflow.com/a/39313208/2089625
+if system('uname -s') == "Darwin\n"
+  set clipboard=unnamed " OSX
+else
+  set clipboard=unnamedplus " Linux
+endif
 
 
 " Mouse support
@@ -79,6 +79,7 @@ let os=substitute(system('uname'), '\n', '', '')
 if os == 'Darwin' || os == 'Mac'
   :set guifont=Meslo\ LG\ S\ DZ\ for\ Powerline:h12
 endif
+
 
 " Set vim airline to clean dividers
 if !exists('g:airline_symbols')
@@ -115,22 +116,6 @@ xmap ga <Plug>(EasyAlign)
 nmap ga <Plug>(EasyAlign)
 
 
-" Configure Unite
-" gj - Find file
-" gl - Find line
-call unite#filters#matcher_default#use(['matcher_fuzzy'])
-
-let g:unite_source_alias_aliases = {}
-let g:unite_source_alias_aliases.line_fuzzy = 'line'
-let g:unite_source_alias_aliases.grep_git_fuzzy = 'grep/git'
-
-call unite#custom#source('line_fuzzy', 'matchers', 'matcher_fuzzy')
-call unite#custom#source('grep_git_fuzzy', 'matchers', 'matcher_fuzzy')
-
-nmap gj :<C-u>Unite -start-insert -no-split -ignorecase tasklist buffer neomru/file neomru/directory<CR>
-nmap gl :<C-u>Unite -start-insert -no-split -ignorecase line_fuzzy<CR>
-
-
 " Configure Gundo
 " \u - Open undo viewer
 nnoremap <leader>u :GundoToggle<CR>
@@ -149,12 +134,6 @@ let g:netrw_localcopycmd = 'cp'
 " \<Tab> - Previous buffer
 :nnoremap <Tab> :bnext<CR>
 :nnoremap <leader><Tab> :bprevious<CR>
-
-
-" Don't enable rainbow highlighting by default, map toggle for rainbow
-" \rt - Toggle rainbow highlighting
-let g:rainbow_active = 0
-nmap <leader>rt :RainbowToggle<CR>
 
 
 " Use Markdown table corners
@@ -214,12 +193,6 @@ nmap <silent> <c-k> :wincmd k<CR>
 nmap <silent> <c-j> :wincmd j<CR> 
 nmap <silent> <c-h> :wincmd h<CR> 
 nmap <silent> <c-l> :wincmd l<CR>
-
-
-" Map open shell, disable slow warning message
-" \ba - Open bash shell
-nmap <leader>ba :ConqueTerm bash -l<CR>
-let g:ConqueTerm_StartMessages = 0
 
 
 " Highlight current line, map toggle for current column highlight
@@ -309,5 +282,10 @@ set signcolumn=yes
 let g:gitgutter_realtime = 0
 let g:gitgutter_eager = 0
 
+
 " Dirvish disable spell check
 autocmd FileType dirvish setlocal nospell
+
+
+" Use login profile for :terminal
+set shell=bash\ -l
