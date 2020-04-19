@@ -10,7 +10,8 @@ export HISTCONTROL=ignorespace
 export LSCOLORS=GxFxCxDxBxegedabagaced
 export PS1="\W\$ "
 
-export REACT_EDITOR=mvim
+export REACT_EDITOR='mvim -f'
+export EDITOR='mvim -f'
 
 # NVM support
 export NVM_DIR="~/.nvm"

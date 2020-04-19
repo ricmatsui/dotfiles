@@ -1,4 +1,3 @@
-" Vundle
 set nocompatible
 filetype off
 
@@ -6,6 +5,10 @@ set expandtab
 set tabstop=4
 set shiftwidth=4
 
+" Disable Macvim touchbar fullscreen button
+let g:macvim_default_touchbar_fullscreen=0
+
+" Vundle
 set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
 Plugin 'gmarik/Vundle.vim'
@@ -17,12 +20,10 @@ Plugin 'terryma/vim-multiple-cursors'
 Plugin 'junegunn/vim-easy-align'
 Plugin '907th/vim-auto-save'
 Plugin 'airblade/vim-gitgutter'
-Plugin 'derekwyatt/vim-scala'
 Plugin 'dhruvasagar/vim-table-mode'
 Plugin 'jlanzarotta/bufexplorer'
 Plugin 'ctrlpvim/ctrlp.vim'
 Plugin 'matze/vim-move'
-Plugin 'mbbill/code_complete'
 Plugin 'nanotech/jellybeans.vim'
 Plugin 'vim-airline/vim-airline'
 Plugin 'vim-airline/vim-airline-themes'
@@ -34,13 +35,9 @@ Plugin 'vim-scripts/gdbmgr'
 Plugin 'vim-scripts/restart.vim'
 Plugin 'tpope/vim-surround'
 Plugin 'AndrewRadev/switch.vim'
-Plugin 'keith/swift.vim'
-Plugin 'ekalinin/Dockerfile.vim'
 Plugin 'wellle/targets.vim'
 Plugin 'ruanyl/vim-gh-line'
 Plugin 'justinmk/vim-dirvish'
-Plugin 'pangloss/vim-javascript'
-Plugin 'mxw/vim-jsx'
 Plugin 'mileszs/ack.vim'
 Plugin 'w0rp/ale'
 Plugin 'ntpeters/vim-better-whitespace'
@@ -50,11 +47,18 @@ Plugin 'kshenoy/vim-signature'
 Plugin 'tpope/vim-speeddating'
 Plugin 'tpope/vim-unimpaired'
 Plugin 'zxqfl/tabnine-vim'
+"Plugin 'codota/tabnine-vim'
 Plugin 'editorconfig/editorconfig-vim'
-Plugin 'majutsushi/tagbar'
 Plugin 'chrisbra/NrrwRgn'
 Plugin 'tpope/vim-obsession'
 Plugin 'wesQ3/vim-windowswap'
+Plugin 'sheerun/vim-polyglot'
+Plugin 'AndrewRadev/sideways.vim'
+Plugin 'fisadev/vim-ctrlp-cmdpalette'
+Plugin 'nathanaelkane/vim-indent-guides'
+Plugin 'christoomey/vim-titlecase'
+
+"Plugin 'majutsushi/tagbar' - Auto updating issues with tag file
 "Plugin 'tpope/vim-sleuth' - Performance issues
 "Plugin 'Valloric/YouCompleteme' - TabNine compatibility issues
 "Plugin 'ludovicchabant/vim-gutentags' - Generating tag files in non-project files
@@ -89,8 +93,8 @@ endif
 set mouse=a
 
 
-" Relative line numbers
-set rnu
+" Hybrid line numbers
+set number relativenumber
 
 
 " Use normal alerts rather than UI alerts for errors
@@ -118,6 +122,8 @@ let g:airline_right_alt_sep = ''
 let g:airline_symbols.linenr = ''
 let g:airline_symbols.maxlinenr = ''
 
+let g:airline_highlighting_cache = 1
+
 " Disable unnecessary vim airline extensions
 let g:airline#extensions#branch#enabled = 0
 
@@ -136,7 +142,7 @@ let g:airline_extensions = [
   \ 'quickfix',
   \ 'tabline',
   \ 'term',
-  \ 'tagbar',
+  "\ 'tagbar',
   \ 'whitespace',
   \ 'windowswap',
   \ ]
@@ -348,8 +354,9 @@ highlight GitGutterChange guifg=#bbbb00 guibg=NONE ctermfg=3 ctermbg=NONE
 highlight GitGutterDelete guifg=#ff2222 guibg=NONE ctermfg=1 ctermbg=NONE
 
 
-" Dirvish disable spell check
+" Disable spell check dirvish and quickfix
 autocmd FileType dirvish setlocal nospell
+autocmd FileType qf setlocal nospell
 
 
 " Use login profile for :terminal
@@ -359,15 +366,22 @@ autocmd FileType dirvish setlocal nospell
 nnoremap <leader>F :Ack<Space>
 let g:ackprg = 'rg --vimgrep --fixed-strings'
 
-
+let g:ale_linter_aliases = {
+\   'asm': ['nasm'],
+\}
 let g:ale_linters = {
 \   'javascript': ['eslint'],
 \   'ruby': ['rubocop'],
+\   'asm': ['nasm'],
+\}
+let g:ale_fixers = {
+\   'javascript': ['eslint'],
 \}
 let g:ale_ruby_rubocop_executable = 'bundle'
 nmap <leader>a <Plug>(ale_next_wrap)
+nmap <leader>e <Plug>(ale_fix)
 
-let g:ycm_collect_identifiers_from_tags_files = 1
+"let g:ycm_collect_identifiers_from_tags_files = 1 - Errors when tag pattern not found
 
 " Fix diff colors
 hi DiffAdd    gui=NONE guifg=NONE    guibg=#182a09
@@ -399,6 +413,7 @@ set suffixesadd=.js,.jsx
 
 " EditorConfig
 let g:EditorConfig_exclude_patterns = ['fugitive://.\*']
+let g:EditorConfig_disable_rules = ['trim_trailing_whitespace']
 
 " Tagbar
 let g:tagbar_left = 1
@@ -407,3 +422,20 @@ let g:tagbar_iconchars = ['+', '-']
 
 " Disable bell
 set visualbell t_vb=
+
+" Move arguments left/right
+nnoremap <leader>, :SidewaysLeft<cr>
+nnoremap <leader>. :SidewaysRight<cr>
+
+" Enable indent guides
+let g:indent_guides_enable_on_vim_startup = 1
+let g:indent_guides_guide_size = 1
+let g:indent_guides_default_mapping = 0
+let g:indent_guides_start_level = 2
+
+" Add ESLint compact error formats
+set errorformat+=%f:\ line\ %l\\,\ col\ %c\\,\ %trror\ -\ %m
+set errorformat+=%f:\ line\ %l\\,\ col\ %c\\,\ %tarning\ -\ %m
+
+" Define lint for JS
+autocmd FileType javascript setlocal makeprg=yarn\ run\ lint

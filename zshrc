@@ -85,3 +85,6 @@ alias r='rake'
 alias es='ec2-ssh ec2-user'
 alias dockerenter='docker run -it --privileged --pid=host debian nsenter -t 1 -m -u -n -i sh'
 alias wiresharkstart="docker run --rm -ti --net=host --privileged -v $HOME:/root:ro -e XAUTHORITY=/root/.Xauthority -e DISPLAY='192.168.1.119:0' manell/wireshark"
+
+export REACT_EDITOR='mvim -f'
+export EDITOR='mvim -f'
