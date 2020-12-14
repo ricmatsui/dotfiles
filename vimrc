@@ -5,69 +5,92 @@ set expandtab
 set tabstop=4
 set shiftwidth=4
 
+" Do not auto-resize windows
+set noequalalways
+
 " Disable Macvim touchbar fullscreen button
 let g:macvim_default_touchbar_fullscreen=0
 
-" Vundle
-set rtp+=~/.vim/bundle/Vundle.vim
-call vundle#begin()
-Plugin 'gmarik/Vundle.vim'
+" Polyglot - Settings before loading plugin
+let g:polyglot_disabled = ['typescript.plugin'] " Disable due to error format override
 
-Plugin 'sjl/gundo.vim'
-Plugin 'Shougo/vimproc.vim'
-Plugin 'andrewradev/splitjoin.vim'
-Plugin 'terryma/vim-multiple-cursors'
-Plugin 'junegunn/vim-easy-align'
-Plugin '907th/vim-auto-save'
-Plugin 'airblade/vim-gitgutter'
-Plugin 'dhruvasagar/vim-table-mode'
-Plugin 'jlanzarotta/bufexplorer'
-Plugin 'ctrlpvim/ctrlp.vim'
-Plugin 'matze/vim-move'
-Plugin 'nanotech/jellybeans.vim'
-Plugin 'vim-airline/vim-airline'
-Plugin 'vim-airline/vim-airline-themes'
-Plugin 'scrooloose/nerdcommenter'
-Plugin 'tpope/vim-fugitive'
-Plugin 'vim-scripts/DoxygenToolkit.vim'
-Plugin 'vim-scripts/a.vim'
-Plugin 'vim-scripts/gdbmgr'
-Plugin 'vim-scripts/restart.vim'
-Plugin 'tpope/vim-surround'
-Plugin 'AndrewRadev/switch.vim'
-Plugin 'wellle/targets.vim'
-Plugin 'ruanyl/vim-gh-line'
-Plugin 'justinmk/vim-dirvish'
-Plugin 'mileszs/ack.vim'
-Plugin 'w0rp/ale'
-Plugin 'ntpeters/vim-better-whitespace'
-Plugin 'yegappan/greplace'
-Plugin 'yssl/QFEnter'
-Plugin 'kshenoy/vim-signature'
-Plugin 'tpope/vim-speeddating'
-Plugin 'tpope/vim-unimpaired'
-Plugin 'zxqfl/tabnine-vim'
-"Plugin 'codota/tabnine-vim'
-Plugin 'editorconfig/editorconfig-vim'
-Plugin 'chrisbra/NrrwRgn'
-Plugin 'tpope/vim-obsession'
-Plugin 'wesQ3/vim-windowswap'
-Plugin 'sheerun/vim-polyglot'
-Plugin 'AndrewRadev/sideways.vim'
-Plugin 'fisadev/vim-ctrlp-cmdpalette'
-Plugin 'nathanaelkane/vim-indent-guides'
-Plugin 'christoomey/vim-titlecase'
-
-"Plugin 'majutsushi/tagbar' - Auto updating issues with tag file
-"Plugin 'tpope/vim-sleuth' - Performance issues
-"Plugin 'Valloric/YouCompleteme' - TabNine compatibility issues
-"Plugin 'ludovicchabant/vim-gutentags' - Generating tag files in non-project files
-"Plugin 'craigemery/vim-autotag' - Generating tag files in non-project files
-"Plugin 'galooshi/vim-import-js' - Need more config
-"Plugin 'thaerkh/vim-workspace'
-"Plugin 'terryma/vim-expand-region'
-call vundle#end()
-filetype plugin indent on
+" Vim-Plug
+call plug#begin()
+Plug 'sjl/gundo.vim'                   " Undo tree visualizer
+Plug 'Shougo/vimproc.vim'              " Asynchronous execution library
+Plug 'andrewradev/splitjoin.vim'       " Switch between a single-line statement and a multi-line one
+Plug 'terryma/vim-multiple-cursors'    " Multiple selection
+Plug 'junegunn/vim-easy-align'         " Alignment plugin
+Plug '907th/vim-auto-save'             " Automatically saves changes
+Plug 'airblade/vim-gitgutter'          " Git diff in the sign column
+Plug 'dhruvasagar/vim-table-mode'      " Table creator & formatter
+Plug 'jlanzarotta/bufexplorer'         " Switch between buffers
+Plug 'ctrlpvim/ctrlp.vim'              " Full path fuzzy file, buffer, mru, tag finder
+Plug 'matze/vim-move'                  " Moves lines and selections
+Plug 'nanotech/jellybeans.vim'         " A colorful, dark color scheme
+Plug 'vim-airline/vim-airline'         " Status/tabline
+Plug 'vim-airline/vim-airline-themes'  " Theme repository for vim-airline
+Plug 'scrooloose/nerdcommenter'        " Comment functions
+Plug 'tpope/vim-fugitive'              " Plugin for Git
+Plug 'vim-scripts/DoxygenToolkit.vim'  " Doxygen comments generator
+Plug 'vim-scripts/a.vim'               " Switch between source and header files
+Plug 'vim-scripts/gdbmgr'              " Window interface to gdb
+Plug 'vim-scripts/restart.vim'         " Restart with command
+Plug 'tpope/vim-surround'              " Mappings to modify parantheses, brackets, quotes in pairs
+Plug 'AndrewRadev/switch.vim'          " Flip values or alternative syntax
+Plug 'wellle/targets.vim'              " Adds various text objects: pair, quote, separator, argument, tag
+Plug 'ruanyl/vim-gh-line'              " Opens a link to the current line on GitHub
+Plug 'justinmk/vim-dirvish'            " Path navigator
+Plug 'mileszs/ack.vim'                 " Run search tool with results list
+Plug 'w0rp/ale'                        " Asynchronous Lint Engine
+Plug 'ntpeters/vim-better-whitespace'  " Highlight trailing whitespace characters
+Plug 'yegappan/greplace'               " Search and replace a pattern across multiple files
+Plug 'yssl/QFEnter'                    " Open items from quickfix or location list
+Plug 'kshenoy/vim-signature'           " Place, toggle and display marks
+Plug 'tpope/vim-speeddating'           " Increment and decrement datetime formats
+Plug 'tpope/vim-unimpaired'            " Pair mappings for next, previous, lines, encoding
+Plug 'editorconfig/editorconfig-vim'   " Config support for EditorConfig
+Plug 'chrisbra/NrrwRgn'                " Focus on a selected region while making the rest inaccessible
+Plug 'tpope/vim-obsession'             " Automatically save sessions
+Plug 'wesQ3/vim-windowswap'            " Swap windows
+Plug 'sheerun/vim-polyglot'            " A collection of language packs
+Plug 'AndrewRadev/sideways.vim'        " Move the item under the cursor left or right
+Plug 'fisadev/vim-ctrlp-cmdpalette'    " Find and run vim commands
+Plug 'nathanaelkane/vim-indent-guides' " Displaying indent levels
+Plug 'christoomey/vim-titlecase'       " Operator for titlecasing
+Plug 'Kuniwak/vim-qrcode'              " Display a QR code
+Plug 'itkq/fluentd-vim'                " Fluentd syntax
+"Plug 'psliwka/vim-smoothie'            " Smooth scrolling
+"Plug 'rbong/vim-flog'                  " Git branch viewer
+Plug 'chamindra/marvim'                " Macro Repository
+Plug 'yegappan/taglist'                " Source Code Browser
+Plug 'sk1418/QFGrep'                   " Quickfix filtering
+Plug 'mhinz/vim-startify'              " Start screen
+Plug 'jceb/vim-orgmode'                " Text outlining and task management
+if has('nvim')
+  Plug 'Shougo/deoplete.nvim'     " Completion framework
+else
+  Plug 'Shougo/deoplete.nvim'     " Completion framework
+  Plug 'roxma/nvim-yarp'          " Remote Plugin Framework
+  Plug 'roxma/vim-hug-neovim-rpc' " Compatibility layer for neovim rpc client
+endif
+Plug 'tbodt/deoplete-tabnine', { 'do': './install.sh' } " A Deoplete source for TabNine
+Plug 'gyim/vim-boxdraw'                                 " Draw ASCII diagrams
+Plug 'autozimu/LanguageClient-neovim', {
+      \ 'branch': 'next',
+      \ 'do': 'bash install.sh',
+      \ }                                               " Language Server Protocol support
+"Plug 'fcpg/vim-kickfix'                         " Issue: Filters content by content of file not content of error
+"Plug 'neoclide/coc.nvim', {'branch': 'release'} " Issue: not complete beyond one symbol at a time
+"Plug 'majutsushi/tagbar'                        " Issue: Auto updating issues with tag file
+"Plug 'tpope/vim-sleuth'                         " Issue: Performance issues
+"Plug 'Valloric/YouCompleteme'                   " Issue: TabNine compatibility issues
+"Plug 'ludovicchabant/vim-gutentags'             " Issue: Generating tag files in non-project files
+"Plug 'craigemery/vim-autotag'                   " Issue: Generating tag files in non-project files
+"Plug 'galooshi/vim-import-js'                   " Issue: Need more config
+"Plug 'thaerkh/vim-workspace'
+"Plug 'terryma/vim-expand-region'
+call plug#end()
 
 colorscheme jellybeans
 
@@ -105,9 +128,23 @@ set guioptions+=c
 " Set font on Mac
 let os=substitute(system('uname'), '\n', '', '')
 if os == 'Darwin' || os == 'Mac'
-  :set guifont=Meslo\ LG\ S\ DZ:h18
+  :set guifont=Meslo\ LG\ S\ DZ:h13
 endif
 
+" Startify
+let g:startify_custom_header = []
+let g:startify_session_persistence = 1
+
+" Deoplete
+let g:deoplete#enable_at_startup = 1
+call deoplete#custom#option({
+      \ 'max_list': 20,
+      \ 'complete_suffix': v:false
+      \ })
+inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
+function! s:my_cr_function() abort
+  return deoplete#close_popup() . "\<CR>"
+endfunction
 
 " Set vim airline to clean dividers
 if !exists('g:airline_symbols')
@@ -143,7 +180,7 @@ let g:airline_extensions = [
   \ 'tabline',
   \ 'term',
   "\ 'tagbar',
-  \ 'whitespace',
+  "\ 'whitespace',
   \ 'windowswap',
   \ ]
 
@@ -183,6 +220,7 @@ nmap ga <Plug>(EasyAlign)
 " Configure Gundo
 " \u - Open undo viewer
 nnoremap <leader>u :GundoToggle<CR>
+let g:gundo_prefer_python3 = 1
 let g:gundo_preview_bottom = 1
 let g:gundo_help = 0
 
@@ -227,7 +265,7 @@ let g:switch_mapping = "_"
 
 
 " Configure Ctrl-P use the repo as the root directory, and use
-" Ag for searching. Show results at the top
+" rg for searching.
 " Ctrl-P - Open file finder
 " Ctrl-U - Open MRU file finder
 let g:ctrlp_working_path_mode = 'r'
@@ -253,11 +291,6 @@ nnoremap <silent> <c-l> :wincmd l<CR>
 " \cc - Toggle column highlight
 :set cursorline
 nmap <leader>cc :set cursorcolumn!<CR>
-
-
-" Map F2 to run make
-" F2 - make
-map <F2> :! bash make <CR>
 
 
 " Configure session autosave and load
@@ -289,8 +322,8 @@ endif
 autocmd FilterWritePre * if &diff | setlocal wrap< | endif
 
 " Map generate Doxygen stub
-" \do - Generate doc stub
-nmap <leader>do :Dox<CR>
+" \Do - Generate doc stub
+nmap <leader>Do :Dox<CR>
 
 
 " Map split buffer to side
@@ -366,16 +399,19 @@ autocmd FileType qf setlocal nospell
 nnoremap <leader>F :Ack<Space>
 let g:ackprg = 'rg --vimgrep --fixed-strings'
 
+"let g:ale_virtualtext_cursor = 1 " Only supported in NeoVim
 let g:ale_linter_aliases = {
 \   'asm': ['nasm'],
 \}
 let g:ale_linters = {
 \   'javascript': ['eslint'],
+\   'typescript': ['eslint', 'tsserver'],
 \   'ruby': ['rubocop'],
 \   'asm': ['nasm'],
 \}
 let g:ale_fixers = {
 \   'javascript': ['eslint'],
+\   'typescript': ['eslint'],
 \}
 let g:ale_ruby_rubocop_executable = 'bundle'
 nmap <leader>a <Plug>(ale_next_wrap)
@@ -402,7 +438,8 @@ vmap <expr> <S-j> DVB_Drag('down')
 vmap <expr> <S-k> DVB_Drag('up')
 
 " Completion menu
-set completeopt=menuone
+set completeopt=menuone,noinsert,noselect
+set pumheight=10
 
 " Disable workspace autosave
 let g:workspace_autosave = 0
@@ -433,9 +470,32 @@ let g:indent_guides_guide_size = 1
 let g:indent_guides_default_mapping = 0
 let g:indent_guides_start_level = 2
 
-" Add ESLint compact error formats
-set errorformat+=%f:\ line\ %l\\,\ col\ %c\\,\ %trror\ -\ %m
-set errorformat+=%f:\ line\ %l\\,\ col\ %c\\,\ %tarning\ -\ %m
+" Error formats
+set errorformat+=%f\\(%l\\,%c\\):\ %trror\ %m                  " TSC error
+set errorformat+=%f:\ line\ %l\\,\ col\ %c\\,\ %trror\ -\ %m   " ESLint error
+set errorformat+=%f:\ line\ %l\\,\ col\ %c\\,\ %tarning\ -\ %m " ESLint warning
 
-" Define lint for JS
+" Define make programs
 autocmd FileType javascript setlocal makeprg=yarn\ run\ lint
+autocmd FileType typescript setlocal makeprg=yarn\ run\ lint
+
+" Org Mode
+let g:org_todo_keywords = [['TODO(t)', 'IN_PROGRESS(p)', '|', 'DONE(d)']]
+let g:org_agenda_files = ['./TODO.org']
+let g:org_indent = 1
+
+" Language Client
+let g:LanguageClient_serverCommands = {
+  \ 'typescript': ['typescript-language-server', '--stdio'],
+  \ }
+nmap <F5> <Plug>(lcn-menu)
+nmap <silent>K <Plug>(lcn-hover)
+nmap <silent> gd <Plug>(lcn-definition)
+nmap <silent> gr <Plug>(lcn-references)
+nmap <silent> gq <Plug>(lcn-update-quickfixlist):cfirst<CR>
+let g:LanguageClient_diagnosticsList = 'Quickfix'
+let g:LanguageClient_diagnosticsSignsMax = 0
+let g:LanguageClient_diagnosticsMaxSeverity = 'Warning'
+let g:LanguageClient_hoverPreview = 'Always'
+let g:LanguageClient_useFloatingHover = 0
+let g:LanguageClient_usePopupHover = 0
