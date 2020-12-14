@@ -1,0 +1,6 @@
+--recurse=yes
+--exclude=.git
+--exclude=node_modules
+--exclude=**/node_modules/*
+--exclude=**/Pods/*
+--exclude=**/build/*
