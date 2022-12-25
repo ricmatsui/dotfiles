@@ -1,6 +1,10 @@
 --recurse=yes
 --exclude=.git
+--exclude=.venv
 --exclude=node_modules
 --exclude=**/node_modules/*
 --exclude=**/Pods/*
 --exclude=**/build/*
+--exclude=**/jmeter/*
+--exclude=jmeter/*
+--exclude=volumes
