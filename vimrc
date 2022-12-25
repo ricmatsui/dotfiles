@@ -1,13 +1,15 @@
 set nocompatible
 filetype off
+syntax on
 
-"set title
 set expandtab
 set tabstop=4
 set shiftwidth=4
 set virtualedit=onemore
 set noincsearch
 set hlsearch
+set signcolumn=yes
+set cursorline
 
 " Do not auto-resize windows
 set noequalalways
@@ -15,36 +17,21 @@ set noequalalways
 " Disable Macvim touchbar fullscreen button
 let g:macvim_default_touchbar_fullscreen=0
 
-" Polyglot - Settings before loading plugin
-" - typescript - Disable due to error format override
-" - org - Disable due to conflict with vim-orgmode
-let g:polyglot_disabled = [
-  \ 'typescript.plugin',
-  \ 'org',
-  \ ]
-
 " Vim-Plug
 call plug#begin()
 Plug 'sjl/gundo.vim'                   " Undo tree visualizer
 Plug 'Shougo/vimproc.vim'              " Asynchronous execution library
 Plug 'andrewradev/splitjoin.vim'       " Switch between a single-line statement and a multi-line one
-"Plug 'terryma/vim-multiple-cursors'    " Multiple selection
-"Plug 'junegunn/vim-easy-align'         " Alignment plugin
 Plug '907th/vim-auto-save'             " Automatically saves changes
-Plug 'airblade/vim-gitgutter'          " Git diff in the sign column
-"Plug 'dhruvasagar/vim-table-mode'      " Table creator & formatter
-"Plug 'jlanzarotta/bufexplorer'         " Switch between buffers - Possible perf issue?
+Plug 'nvim-lua/plenary.nvim'           " Lua Utils
+Plug 'lewis6991/gitsigns.nvim', { 'branch': 'main' } " Git sign column
 Plug 'ctrlpvim/ctrlp.vim'              " Full path fuzzy file, buffer, mru, tag finder
-"Plug 'matze/vim-move'                  " Moves lines and selections
 Plug 'nanotech/jellybeans.vim'         " A colorful, dark color scheme
 Plug 'vim-airline/vim-airline'         " Status/tabline
 Plug 'vim-airline/vim-airline-themes'  " Theme repository for vim-airline
 Plug 'scrooloose/nerdcommenter'        " Comment functions
 Plug 'tpope/vim-fugitive'              " Plugin for Git
-"Plug 'vim-scripts/DoxygenToolkit.vim'  " Doxygen comments generator
 Plug 'vim-scripts/a.vim'               " Switch between source and header files
-"Plug 'vim-scripts/gdbmgr'              " Window interface to gdb
-"Plug 'vim-scripts/restart.vim'         " Restart with command
 Plug 'tpope/vim-surround'              " Mappings to modify parantheses, brackets, quotes in pairs
 Plug 'AndrewRadev/switch.vim'          " Flip values or alternative syntax
 Plug 'wellle/targets.vim'              " Adds various text objects: pair, quote, separator, argument, tag
@@ -52,47 +39,75 @@ Plug 'ruanyl/vim-gh-line'              " Opens a link to the current line on Git
 Plug 'justinmk/vim-dirvish'            " Path navigator
 Plug 'mileszs/ack.vim'                 " Run search tool with results list
 Plug 'w0rp/ale'                        " Asynchronous Lint Engine
+Plug 'tpope/vim-speeddating'           " Increment and decrement datetime formats
+Plug 'tpope/vim-unimpaired'            " Pair mappings for next, previous, lines, encoding
+Plug 'editorconfig/editorconfig-vim'   " Config support for EditorConfig
+Plug 'wesQ3/vim-windowswap'            " Swap windows
+Plug 'fisadev/vim-ctrlp-cmdpalette'    " Find and run vim commands
+Plug 'Kuniwak/vim-qrcode'              " Display a QR code
+Plug 'itkq/fluentd-vim'                " Fluentd syntax
+Plug 'sk1419/QFGrep'                   " Quickfix filtering
+Plug 'mhinz/vim-startify'              " Start screen
+Plug 'direnv/direnv.vim'               " Direnv support
+Plug 'gcmt/taboo.vim'                  " Tab renaming
+Plug 'skywind3000/asyncrun.vim'        " Async Run
+Plug 'tpope/vim-repeat'                " Repeat for plugin commands
+Plug 'tversteeg/registers.nvim', { 'branch': 'main' } " Show vim register values
+Plug 'lukas-reineke/indent-blankline.nvim' " Indent guides
+Plug 'ms-jpq/coq_nvim', {'branch': 'coq'} " Autocompletion
+Plug 'vimwiki/vimwiki'                 " Wiki
+Plug 'junegunn/fzf'                    " File finder for Zettel
+Plug 'junegunn/fzf.vim'                " File finder for Zettel
+Plug 'michal-h21/vim-zettel'           " Note taking
+Plug 'takemon-go/dotd'                 " Date completion
+Plug 'tikhomirov/vim-glsl'             " GLSL support
+Plug 'jxnblk/vim-mdx-js'               " MDX support
+Plug 'wellle/context.vim'              " Context of lines
+
+"Disabled plugins
+"Plug 'terryma/vim-multiple-cursors'    " Multiple selection
+"Plug 'junegunn/vim-easy-align'         " Alignment plugin
+"Plug 'dhruvasagar/vim-table-mode'      " Table creator & formatter
+"Plug 'jlanzarotta/bufexplorer'         " Switch between buffers - Possible perf issue?
+"Plug 'matze/vim-move'                  " Moves lines and selections
+"Plug 'vim-scripts/DoxygenToolkit.vim'  " Doxygen comments generator
+"Plug 'vim-scripts/gdbmgr'              " Window interface to gdb
+"Plug 'vim-scripts/restart.vim'         " Restart with command
 "Plug 'ntpeters/vim-better-whitespace'  " Highlight trailing whitespace characters
 "Plug 'yegappan/greplace'               " Search and replace a pattern across multiple files
 "Plug 'yssl/QFEnter'                    " Open items from quickfix or location list
 "Plug 'kshenoy/vim-signature'           " Place, toggle and display marks
-Plug 'tpope/vim-speeddating'           " Increment and decrement datetime formats
-Plug 'tpope/vim-unimpaired'            " Pair mappings for next, previous, lines, encoding
-Plug 'editorconfig/editorconfig-vim'   " Config support for EditorConfig
 "Plug 'chrisbra/NrrwRgn'                " Focus on a selected region while making the rest inaccessible
 "Plug 'tpope/vim-obsession'             " Automatically save sessions
-Plug 'wesQ3/vim-windowswap'            " Swap windows
-"Plug 'sheerun/vim-polyglot'            " A collection of language packs
+"Plug 'sheerun/vim-polyglot'            " A collection of language packs - possible perf issue?
 "Plug 'AndrewRadev/sideways.vim'        " Move the item under the cursor left or right
-Plug 'fisadev/vim-ctrlp-cmdpalette'    " Find and run vim commands
 "Plug 'nathanaelkane/vim-indent-guides' " Displaying indent levels - possible perf issue?
 "Plug 'christoomey/vim-titlecase'       " Operator for titlecasing
-Plug 'Kuniwak/vim-qrcode'              " Display a QR code
-Plug 'itkq/fluentd-vim'                " Fluentd syntax
 "Plug 'psliwka/vim-smoothie'            " Smooth scrolling
 "Plug 'rbong/vim-flog'                  " Git branch viewer
 "Plug 'chamindra/marvim'                " Macro Repository
 "Plug 'yegappan/taglist'                " Source Code Browser
-Plug 'sk1418/QFGrep'                   " Quickfix filtering
-Plug 'mhinz/vim-startify'              " Start screen
-Plug 'jceb/vim-orgmode'                " Text outlining and task management
-if has('nvim')
-  Plug 'Shougo/deoplete.nvim'     " Completion framework
-else
-  Plug 'Shougo/deoplete.nvim'     " Completion framework
-  Plug 'roxma/nvim-yarp'          " Remote Plugin Framework
-  Plug 'roxma/vim-hug-neovim-rpc' " Compatibility layer for neovim rpc client
-endif
-Plug 'tbodt/deoplete-tabnine', { 'do': './install.sh' } " A Deoplete source for TabNine
-"Plug 'gyim/vim-boxdraw'                                 " Draw ASCII diagrams
-Plug 'ricmatsui/LanguageClient-neovim', {
-      \ 'branch': 'rm-manual-update',
-      \ 'do': 'make release',
-      \ }                                               " Language Server Protocol support
-"Plug 'gerw/vim-HiLinkTrace'     " Highlight debugging - possible perf issue?
-Plug 'direnv/direnv.vim'        " Direnv support
-Plug 'gcmt/taboo.vim'           " Tab renaming
-Plug 'skywind3000/asyncrun.vim' " Async Run
+"Plug 'gyim/vim-boxdraw'                " Draw ASCII diagrams
+"Plug 'gerw/vim-HiLinkTrace'            " Highlight debugging - possible perf issue?
+"Plug 'thaerkh/vim-workspace'
+"Plug 'terryma/vim-expand-region'
+"Plug 'nvim-lua/completion-nvim'        " Completion engine
+"Plug 'aca/completion-tabnine', { 'do': 'version=3.1.9 ./install.sh' }
+"Plug 'steelsojka/completion-buffers'
+"Plug 'github/copilot.vim', { 'branch': 'release' }
+"Plug 'renerocksai/telekasten.nvim', { 'branch': 'main' } " No custom template, no unique file names
+"Plug 'jceb/vim-orgmode'                " Text outlining and task management
+
+"Future plugins
+"https://github.com/AckslD/nvim-neoclip.lua
+"https://github.com/nvim-neorg/neorg
+"https://github.com/ojroques/nvim-hardline
+"https://github.com/nvim-treesitter/nvim-treesitter
+"https://github.com/nvim-treesitter/nvim-treesitter-textobjects
+"https://github.com/mfussenegger/nvim-lint
+"Plug 'nvim-telescope/telescope.nvim'
+
+"Conflicting plugins
 "Plug 'fcpg/vim-kickfix'                         " Issue: Filters content by content of file not content of error
 "Plug 'neoclide/coc.nvim', {'branch': 'release'} " Issue: not complete beyond one symbol at a time
 "Plug 'majutsushi/tagbar'                        " Issue: Auto updating issues with tag file
@@ -102,12 +117,13 @@ Plug 'skywind3000/asyncrun.vim' " Async Run
 "Plug 'craigemery/vim-autotag'                   " Issue: Generating tag files in non-project files
 "Plug 'galooshi/vim-import-js'                   " Issue: Need more config
 "Plug 'Quramy/tsuquyomi'                         " Issue: Freezes
-"Plug 'thaerkh/vim-workspace'
-"Plug 'terryma/vim-expand-region'
+"Plug 'neovim/nvim-lspconfig'                    " Issue: Using ALE for now
+"Plug 'kristijanhusak/orgmode.nvim' " Requires treesitter
 call plug#end()
 
 colorscheme jellybeans
 
+" Dark background
 let g:jellybeans_overrides = {
       \    'background': { 'ctermbg': '000000', '256ctermbg': '000000' },
       \}
@@ -154,30 +170,25 @@ endif
 " Startify
 let g:startify_custom_header = []
 let g:startify_session_persistence = 1
-
-" Deoplete
-let g:deoplete#enable_at_startup = 1
-call deoplete#custom#option({
-      \ 'max_list': 20,
-      \ 'complete_suffix': v:false
-      \ })
-inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
-function! s:my_cr_function() abort
-  return deoplete#close_popup() . "\<CR>"
-endfunction
+let g:startify_change_to_vcs_root = 1
+let g:startify_lists = [
+      \ { 'type': 'dir',       'header': ['   MRU '. getcwd()] },
+      \ { 'type': 'sessions',  'header': ['   Sessions']       },
+      \ ]
 
 " Set vim airline to clean dividers
 if !exists('g:airline_symbols')
   let g:airline_symbols = {}
 endif
 
+let g:airline_symbols.linenr = ' '
+let g:airline_symbols.maxlinenr = ''
+let g:airline_symbols.colnr = ' '
+
 let g:airline_left_sep = ''
 let g:airline_left_alt_sep = ''
 let g:airline_right_sep = ''
 let g:airline_right_alt_sep = ''
-
-let g:airline_symbols.linenr = ''
-let g:airline_symbols.maxlinenr = ''
 
 let g:airline_highlighting_cache = 1
 
@@ -186,6 +197,8 @@ let g:airline#extensions#branch#enabled = 0
 
 " Cleanup vim airline sections and layout
 let g:airline_section_a = airline#section#create(['crypt', 'paste', 'iminsert'])
+"let g:airline_section_c_only_filename = 1
+"let g:airline_stl_path_style = 'short'
 let g:airline_section_x = airline#section#create_right([])
 let g:airline_section_y = airline#section#create_right([])
 
@@ -193,14 +206,9 @@ let g:airline_extensions = [
   \ 'ale',
   \ 'ctrlp',
   \ 'fugitiveline',
-  \ 'hunks',
-  \ 'nrrwrgn',
-  \ 'obsession',
   \ 'quickfix',
   \ 'tabline',
   \ 'term',
-  "\ 'tagbar',
-  "\ 'whitespace',
   \ 'windowswap',
   \ ]
 
@@ -220,15 +228,18 @@ let g:airline#extensions#hunks#non_zero_only = 1
 " Airline theme improvements
 let g:airline_theme_patch_func = 'AirlineThemePatch'
 function! AirlineThemePatch(palette)
-  if g:airline_theme == 'jellybeans'
-    " Brighten file names
-    for colors in values(a:palette.inactive)
-      let colors[0] = '#ffffff'
-    endfor
-    for colors in values(a:palette.normal)
-      let colors[0] = '#ffffff'
-    endfor
-  endif
+    if g:airline_theme == 'jellybeans'
+        let a:palette.inactive['airline_c'][3] = '236'
+        let a:palette.normal['airline_c'][2] = 'White'
+        let a:palette.normal['airline_c'][3] = '236'
+        let a:palette.visual['airline_c'][2] = 'White'
+        let a:palette.visual['airline_c'][3] = '236'
+        let a:palette.insert['airline_c'][2] = 'White'
+        let a:palette.insert['airline_c'][3] = '236'
+        let a:palette.replace['airline_c'][2] = 'White'
+        let a:palette.replace['airline_c'][3] = '236'
+        let g:testoutput = keys(a:palette)
+    endif
 endfunction
 
 " Taboo config
@@ -257,13 +268,6 @@ let g:netrw_bufsettings = 'noma nomod rnu nowrap ro nobl'
 let g:netrw_localcopycmd = 'cp'
 
 
-" Map Tab to switch buffers
-" <Tab>  - Next buffer
-" \<Tab> - Previous buffer
-:nnoremap <Tab> :bnext<CR>
-:nnoremap <leader><Tab> :bprevious<CR>
-
-
 " Use Markdown table corners
 let g:table_mode_corner="|"
 let g:table_mode_motion_up_map='<leader>t{'
@@ -282,7 +286,9 @@ set foldlevelstart=99
 nmap <leader>f za
 
 
-" Use rg for grep
+" Grep with Ack and rg
+nnoremap <leader>F :Ack<Space>
+let g:ackprg = 'rg --vimgrep --fixed-strings'
 set grepprg=rg\ --vimgrep\ --fixed-strings
 
 
@@ -314,14 +320,8 @@ nnoremap <silent> <c-l> :wincmd l<CR>
 
 
 " Highlight current line, map toggle for current column highlight
-" \cc - Toggle column highlight
-:set cursorline
-nmap <leader>cc :set cursorcolumn!<CR>
-
-
-" Configure session autosave and load
-:let g:session_autosave = 'yes'
-:let g:session_autoload = 'yes'
+" \ch - Toggle column highlight
+nnoremap <leader>ch :set cursorcolumn!<CR>
 
 
 " Show tabs
@@ -334,7 +334,7 @@ set list
 " \gc  - git commit
 " \gp  - git push
 " \gca  - git commit all
-nmap <leader>gs :Gstatus<CR>
+nmap <leader>gs :Git<CR>
 nmap <leader>gd :Gdiff<CR>
 nmap <leader>gc :Gcommit<CR>
 nmap <leader>gp :Gpush<CR>
@@ -347,43 +347,9 @@ endif
 
 autocmd FilterWritePre * if &diff | setlocal wrap< | endif
 
-" Map generate Doxygen stub
-" \Do - Generate doc stub
-nmap <leader>Do :Dox<CR>
-
-
 " Map split buffer to side
 " \A - Split buffer vertically and remain in current buffer
 nmap <leader>A :vsp<CR><C-w>l:A<CR><C-w>h
-
-
-" Map go to next error
-" \[ - Go to next error
-nmap <leader>[ :cnext<CR>
-
-
-" Map go to next error
-" \[ - Go to next error
-nmap <leader>t :tab split<CR>
-
-
-" Auto reload vimrc
-autocmd! bufwritepost .vimrc source %
-
-
-" Configure YouCompleteMe, and map go to definition
-" \jd - Go to definition
-syntax on
-let g:ycm_confirm_extra_conf = 0
-nnoremap <leader>jd :YcmCompleter GoTo<CR>
-
-let g:ycm_enable_diagnostic_highlighting = 0
-
-
-" Bookmarks
-highlight BookmarkLine term=reverse cterm=reverse gui=reverse
-highlight BookmarkAnnotationLine term=reverse cterm=reverse gui=reverse
-let g:bookmark_highlight_lines = 1
 
 
 " Fast replace all occurrences of word under cursor
@@ -402,44 +368,32 @@ let @f = "O# frozen_string_literal: truej^i"
 let @v = "o# vim: ts=4 sw=4 sts=4 sr et	\	"
 
 
-" Git Gutter settings
-set signcolumn=yes
-
-let g:gitgutter_realtime = 0
-let g:gitgutter_eager = 0
-
-highlight GitGutterAdd    guifg=#009900 guibg=NONE ctermfg=2 ctermbg=NONE
-highlight GitGutterChange guifg=#bbbb00 guibg=NONE ctermfg=3 ctermbg=NONE
-highlight GitGutterDelete guifg=#ff2222 guibg=NONE ctermfg=1 ctermbg=NONE
-
-
 " Disable spell check dirvish and quickfix
 autocmd FileType dirvish setlocal nospell
 autocmd FileType qf setlocal nospell
 
 
-" Use login profile for :terminal
-"set shell=bash\ -l
-"set shellcmdflag=-ic
-
-nnoremap <leader>F :Ack<Space>
-let g:ackprg = 'rg --vimgrep --fixed-strings'
-
 let g:ale_virtualtext_cursor = 1 " Only supported in NeoVim
 let g:ale_virtualtext_prefix = '# '
 let g:ale_linter_aliases = {
 \   'asm': ['nasm'],
+\   'markdown.mdx': ['markdown'],
 \}
 let g:ale_linters = {
 \   'javascript': ['eslint'],
 \   'typescript': ['eslint', 'tsserver'],
+\   'markdown': [],
 \   'json': ['jsonlint'],
 \   'ruby': ['rubocop'],
+\   'rust': ['analyzer'],
 \   'asm': ['nasm'],
 \}
 let g:ale_fixers = {
-\   'javascript': ['eslint'],
-\   'typescript': ['eslint'],
+\   'javascript': ['eslint', 'prettier'],
+\   'typescript': ['eslint', 'prettier'],
+\   'typescriptreact': ['eslint', 'prettier'],
+\   'markdown': ['prettier'],
+\   'rust': ['rustfmt'],
 \}
 
 let g:ale_ruby_rubocop_executable = 'bundle'
@@ -448,11 +402,12 @@ let g:ale_javascript_eslint_executable = 'eslint_d'
 let g:ale_javascript_eslint_options = '--cache'
 let g:ale_javascript_eslint_use_global = 1
 
+let g:ale_hover_to_floating_preview = 1
+
 nmap <leader>a <Plug>(ale_next_wrap)
 nmap <leader>e <Plug>(ale_fix)
 nmap <leader>d <Plug>(ale_detail)
-
-"let g:ycm_collect_identifiers_from_tags_files = 1 - Errors when tag pattern not found
+nmap <leader>v <Plug>(ale_hover)
 
 " Fix diff colors
 hi DiffAdd    gui=NONE guifg=NONE    guibg=#182a09
@@ -465,12 +420,6 @@ hi DiffText   gui=NONE guifg=NONE    guibg=#1c3a4a
 
 " Always show status line
 set laststatus=2
-
-" Drag visual blocks
-vmap <expr> <S-h> DVB_Drag('left')
-vmap <expr> <S-l> DVB_Drag('right')
-vmap <expr> <S-j> DVB_Drag('down')
-vmap <expr> <S-k> DVB_Drag('up')
 
 " Completion menu
 set completeopt=menuone,noinsert,noselect
@@ -499,12 +448,6 @@ set visualbell t_vb=
 nnoremap <leader>, :SidewaysLeft<cr>
 nnoremap <leader>. :SidewaysRight<cr>
 
-" Enable indent guides
-let g:indent_guides_enable_on_vim_startup = 1
-let g:indent_guides_guide_size = 1
-let g:indent_guides_default_mapping = 0
-let g:indent_guides_start_level = 2
-
 " Error formats
 set errorformat+=%f\\(%l\\,%c\\):\ %trror\ %m                  " TSC error
 set errorformat+=%f:\ line\ %l\\,\ col\ %c\\,\ %trror\ -\ %m   " ESLint error
@@ -515,26 +458,9 @@ autocmd FileType javascript setlocal makeprg=yarn\ run\ lint
 autocmd FileType typescript setlocal makeprg=yarn\ run\ lint
 
 " Org Mode
-let g:org_todo_keywords = [['TODO(t)', 'IN_PROGRESS(p)', '|', 'DONE(d)']]
-let g:org_agenda_files = ['./TODO.org']
-let g:org_indent = 1
-
-" Language Client
-let g:LanguageClient_serverCommands = {
-  \ 'typescript': ['typescript-language-server', '--stdio'],
-  \ }
-nmap <F5> <Plug>(lcn-menu)
-nmap <silent>K <Plug>(lcn-hover)
-nmap <silent> gd <Plug>(lcn-definition)
-nmap <silent> gr <Plug>(lcn-references)
-nmap <silent> gq <Plug>(lcn-update-quickfixlist):cfirst<CR>
-let g:LanguageClient_diagnosticsList = 'Quickfix'
-let g:LanguageClient_diagnosticsSignsMax = 0
-let g:LanguageClient_diagnosticsMaxSeverity = 'Warning'
-let g:LanguageClient_hoverPreview = 'Always'
-let g:LanguageClient_useFloatingHover = 0
-let g:LanguageClient_usePopupHover = 0
-let g:LanguageClient_selectionUI = 'quickfix'
+"let g:org_todo_keywords = [['TODO(t)', 'IN_PROGRESS(p)', '|', 'DONE(d)']]
+"let g:org_agenda_files = ['./TODO.org']
+"let g:org_indent = 1
 
 " NERD Commenter
 let g:NERDCustomDelimiters={
@@ -558,8 +484,139 @@ if has('gui_vimr')
   inoremap <d-w> <C-o>:q<CR>
 endif
 
-com! FormatJSON %!jq .
+" New tab
+nnoremap <M-t> :tabnew<CR>
+" Switch tabs
+nnoremap <M-{> :tabp<CR>
+vnoremap <M-{> :tabp<CR>
+inoremap <M-{> :tabp<CR>
+nnoremap <M-}> :tabn<CR>
+vnoremap <M-}> :tabn<CR>
+inoremap <M-}> :tabn<CR>
+" Close current buffer/file
+nnoremap <M-w> :q<CR>
+inoremap <M-w> <C-o>:q<CR>
 
+" Format JSON command
+command! FormatJSON %!jq .
+
+" Async make command
 command! -bang -nargs=* -complete=file Make AsyncRun -program=make @ <args>
 
+" Async Run - automatically open quickfix with 8 lines visible
 let g:asyncrun_open = 8
+
+" gitsigns
+lua << EOF
+    require('gitsigns').setup {
+        signs = {
+            add = { text = '+' },
+            change = { text = '~' },
+            delete = { text = '_' },
+            topdelete = { text = '‾' },
+            changedelete = { text = '~_' },
+        },
+
+        on_attach = function(bufnr)
+            local function map(mode, lhs, rhs, opts)
+                opts = vim.tbl_extend('force', {noremap = true, silent = true}, opts or {})
+                vim.api.nvim_buf_set_keymap(bufnr, mode, lhs, rhs, opts)
+            end
+
+            map('n', ']c', "&diff ? ']c' : '<cmd>Gitsigns next_hunk<CR>'", {expr=true})
+            map('n', '[c', "&diff ? '[c' : '<cmd>Gitsigns prev_hunk<CR>'", {expr=true})
+
+            map('n', '<leader>hr', ':Gitsigns reset_hunk<CR>')
+            map('v', '<leader>hr', ':Gitsigns reset_hunk<CR>')
+        end
+    }
+EOF
+
+" completion-nvim
+"autocmd BufEnter * lua require'completion'.on_attach()
+"set shortmess+=c
+"let g:completion_chain_complete_list = {
+    "\ 'default': [
+    "\    {'complete_items': ['tabnine']},
+    "\    {'complete_items': ['buffers']},
+    "\    {'mode': '<c-p>'},
+    "\    {'mode': '<c-n>'}
+    "\]
+"\}
+"let g:completion_matching_strategy_list = ['exact', 'substring', 'fuzzy', 'all']
+"let g:completion_confirm_key = ''
+"let g:completion_trigger_on_delete = 1
+
+"imap <c-j> <Plug>(completion_next_source)
+"imap <c-k> <Plug>(completion_prev_source)
+
+" Indent blankline
+" Workaround for https://github.com/neovim/neovim/issues/14209
+set colorcolumn=99999
+lua << EOF
+require('indent_blankline').setup {
+}
+EOF
+
+"lua << EOF
+"require('orgmode').setup({
+  "org_agenda_files = {'./TODO.org'},
+  "org_default_notes_file = './TODO.org',
+  "org_todo_keywords = {'TODO(t)', 'IN_PROGRESS(p)', '|', 'DONE(d)'},
+  "org_indent_mode = 'noindent',
+  "org_log_done = 'false',
+"})
+"EOF
+
+"let g:copilot_filetypes = {
+            "\ 'markdown': v:true,
+            "\ }
+
+let g:coq_settings = {
+            \ 'auto_start': 'shut-up',
+            \ 'display.pum.fast_close': v:false,
+            \ 'clients.tabnine.enabled': v:true,
+            \ 'clients.snippets.enabled': v:false,
+            \ 'clients.snippets.warn': [],
+            \ 'clients.buffers.enabled': v:false,
+            \ 'display.ghost_text.enabled': v:false,
+            \ 'display.icons.mode': 'none',
+            \ 'keymap.jump_to_mark': '<c-s>',
+            \ }
+
+nnoremap <silent> <c-h> :wincmd h<CR>
+
+let g:vimwiki_list = [
+            \     {
+            \         'path': '~/synced/Wiki',
+            \         'syntax': 'markdown',
+            \         'ext': '.md'
+            \     }
+            \ ]
+
+let g:vimwiki_hl_cb_checked = 1
+let g:vimwiki_listsyms = ' .X'
+let g:vimwiki_key_mappings = {
+            \ 'headers': 0,
+            \ }
+"let g:vimwiki_folding = 'list'
+hi! link VimwikiCheckBoxDone Title
+nmap <Leader>ws <Plug>VimwikiSplitLink
+nmap <Leader>wv <Plug>VimwikiVSplitLink
+nmap <Leader>wt <Plug>VimwikiTabnewLink
+
+let g:zettel_fzf_command = "rg --column --line-number --ignore-case --no-heading --color=always "
+let g:zettel_options = [
+            \ {
+            \     'template': '~/synced/Wiki/template.tpl',
+            \     'disable_front_matter': 1
+            \ }
+            \ ]
+nmap <leader>zo :ZettelOpen<CR>
+
+augroup dateformats
+	autocmd!
+	autocmd VimEnter * silent execute 'SpeedDatingFormat %i %Y-%m-%d'
+augroup END
+
+let g:context_max_height = 2
