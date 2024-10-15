@@ -1,0 +1,20 @@
+diff --git a/plugin/taboo.vim b/plugin/taboo.vim
+index b6dca0e..7ea3309 100644
+--- a/plugin/taboo.vim
++++ b/plugin/taboo.vim
+@@ -125,6 +125,15 @@ fu s:expand(tabnr, fmt)
+     let out = substitute(out, '\C%P', s:tabpwd(a:tabnr, 1), "")
+     let out = substitute(out, '\C%S', s:tabpwd(a:tabnr, 2), "")
+     let out = substitute(out, '\C%x', s:tabclose(a:tabnr), "")
++
++    let buffers = tabpagebuflist(a:tabnr)
++    let buf = s:first_normal_buffer(buffers)
++    let title = matchstr(join(getbufline(buf, 1, 5), "\n"), 'title\: \zs[^\n]*\ze')
++
++    if !empty(title)
++        return title
++    endif
++
+     return out
+ endfu
+ 

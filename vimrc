@@ -11,6 +11,9 @@ set hlsearch
 set signcolumn=yes
 set cursorline
 
+" Streamlit and React Native incompatibility
+set noswapfile
+
 " Do not auto-resize windows
 set noequalalways
 
@@ -38,7 +41,6 @@ Plug 'wellle/targets.vim'              " Adds various text objects: pair, quote,
 Plug 'ruanyl/vim-gh-line'              " Opens a link to the current line on GitHub
 Plug 'justinmk/vim-dirvish'            " Path navigator
 Plug 'mileszs/ack.vim'                 " Run search tool with results list
-Plug 'w0rp/ale'                        " Asynchronous Lint Engine
 Plug 'tpope/vim-speeddating'           " Increment and decrement datetime formats
 Plug 'tpope/vim-unimpaired'            " Pair mappings for next, previous, lines, encoding
 Plug 'editorconfig/editorconfig-vim'   " Config support for EditorConfig
@@ -46,14 +48,14 @@ Plug 'wesQ3/vim-windowswap'            " Swap windows
 Plug 'fisadev/vim-ctrlp-cmdpalette'    " Find and run vim commands
 Plug 'Kuniwak/vim-qrcode'              " Display a QR code
 Plug 'itkq/fluentd-vim'                " Fluentd syntax
-Plug 'sk1419/QFGrep'                   " Quickfix filtering
+Plug 'sk1418/QFGrep'                   " Quickfix filtering
 Plug 'mhinz/vim-startify'              " Start screen
 Plug 'direnv/direnv.vim'               " Direnv support
 Plug 'gcmt/taboo.vim'                  " Tab renaming
 Plug 'skywind3000/asyncrun.vim'        " Async Run
 Plug 'tpope/vim-repeat'                " Repeat for plugin commands
 Plug 'tversteeg/registers.nvim', { 'branch': 'main' } " Show vim register values
-Plug 'lukas-reineke/indent-blankline.nvim' " Indent guides
+Plug 'lukas-reineke/indent-blankline.nvim', { 'tag': 'v2.20.8' } " Indent guides
 Plug 'ms-jpq/coq_nvim', {'branch': 'coq'} " Autocompletion
 Plug 'vimwiki/vimwiki'                 " Wiki
 Plug 'junegunn/fzf'                    " File finder for Zettel
@@ -62,7 +64,16 @@ Plug 'michal-h21/vim-zettel'           " Note taking
 Plug 'takemon-go/dotd'                 " Date completion
 Plug 'tikhomirov/vim-glsl'             " GLSL support
 Plug 'jxnblk/vim-mdx-js'               " MDX support
-Plug 'wellle/context.vim'              " Context of lines
+Plug 'neovim/nvim-lspconfig'           " LSP support
+Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'} " Tree-sitter support
+Plug 'nvim-treesitter/nvim-treesitter-textobjects'
+Plug 'jose-elias-alvarez/null-ls.nvim', { 'branch': 'main' }
+Plug 'mizlan/iswap.nvim'
+Plug 'nvim-treesitter/nvim-treesitter-context'
+Plug 'nvim-tree/nvim-web-devicons'
+Plug 'ibhagwan/fzf-lua', {'branch': 'main'}
+Plug 'pwntester/octo.nvim'
+Plug 'supermaven-inc/supermaven-nvim', { 'branch': 'main' }
 
 "Disabled plugins
 "Plug 'terryma/vim-multiple-cursors'    " Multiple selection
@@ -105,6 +116,8 @@ Plug 'wellle/context.vim'              " Context of lines
 "https://github.com/nvim-treesitter/nvim-treesitter
 "https://github.com/nvim-treesitter/nvim-treesitter-textobjects
 "https://github.com/mfussenegger/nvim-lint
+"https://github.com/mizlan/iswap.nvim
+"https://github.com/gbprod/substitute.nvim
 "Plug 'nvim-telescope/telescope.nvim'
 
 "Conflicting plugins
@@ -117,8 +130,8 @@ Plug 'wellle/context.vim'              " Context of lines
 "Plug 'craigemery/vim-autotag'                   " Issue: Generating tag files in non-project files
 "Plug 'galooshi/vim-import-js'                   " Issue: Need more config
 "Plug 'Quramy/tsuquyomi'                         " Issue: Freezes
-"Plug 'neovim/nvim-lspconfig'                    " Issue: Using ALE for now
 "Plug 'kristijanhusak/orgmode.nvim' " Requires treesitter
+"Plug 'wellle/context.vim'                       " Issue: Renders context over ALE details
 call plug#end()
 
 colorscheme jellybeans
@@ -161,12 +174,6 @@ set number relativenumber
 set guioptions=
 set guioptions+=c
 
-
-" Set font on Mac
-if has('gui_macvim')
-  set guifont=Meslo\ LG\ S\ DZ:h13
-endif
-
 " Startify
 let g:startify_custom_header = []
 let g:startify_session_persistence = 1
@@ -195,22 +202,30 @@ let g:airline_highlighting_cache = 1
 " Disable unnecessary vim airline extensions
 let g:airline#extensions#branch#enabled = 0
 
+function! GetTitle()
+    return matchstr(join(getline(1, 5), "\n"), 'title\: \zs[^\n]*\ze')
+endfunction
+call airline#parts#define_function('title', 'GetTitle')
+
 " Cleanup vim airline sections and layout
 let g:airline_section_a = airline#section#create(['crypt', 'paste', 'iminsert'])
+let g:airline_section_b = airline#section#create(['title'])
 "let g:airline_section_c_only_filename = 1
 "let g:airline_stl_path_style = 'short'
 let g:airline_section_x = airline#section#create_right([])
 let g:airline_section_y = airline#section#create_right([])
 
 let g:airline_extensions = [
-  \ 'ale',
   \ 'ctrlp',
   \ 'fugitiveline',
   \ 'quickfix',
   \ 'tabline',
   \ 'term',
   \ 'windowswap',
+  \ 'nvimlsp',
   \ ]
+
+let airline#extensions#nvimlsp#show_line_numbers = 0
 
 let g:airline#extensions#default#section_truncate_width = {}
 
@@ -281,7 +296,9 @@ let g:pymode_lint = 0
 
 " Configure folding
 " \f - Toggle fold at the current level
-set foldmethod=indent
+set foldmethod=expr
+set foldexpr=nvim_treesitter#foldexpr()
+set nofoldenable
 set foldlevelstart=99
 nmap <leader>f za
 
@@ -373,42 +390,6 @@ autocmd FileType dirvish setlocal nospell
 autocmd FileType qf setlocal nospell
 
 
-let g:ale_virtualtext_cursor = 1 " Only supported in NeoVim
-let g:ale_virtualtext_prefix = '# '
-let g:ale_linter_aliases = {
-\   'asm': ['nasm'],
-\   'markdown.mdx': ['markdown'],
-\}
-let g:ale_linters = {
-\   'javascript': ['eslint'],
-\   'typescript': ['eslint', 'tsserver'],
-\   'markdown': [],
-\   'json': ['jsonlint'],
-\   'ruby': ['rubocop'],
-\   'rust': ['analyzer'],
-\   'asm': ['nasm'],
-\}
-let g:ale_fixers = {
-\   'javascript': ['eslint', 'prettier'],
-\   'typescript': ['eslint', 'prettier'],
-\   'typescriptreact': ['eslint', 'prettier'],
-\   'markdown': ['prettier'],
-\   'rust': ['rustfmt'],
-\}
-
-let g:ale_ruby_rubocop_executable = 'bundle'
-
-let g:ale_javascript_eslint_executable = 'eslint_d'
-let g:ale_javascript_eslint_options = '--cache'
-let g:ale_javascript_eslint_use_global = 1
-
-let g:ale_hover_to_floating_preview = 1
-
-nmap <leader>a <Plug>(ale_next_wrap)
-nmap <leader>e <Plug>(ale_fix)
-nmap <leader>d <Plug>(ale_detail)
-nmap <leader>v <Plug>(ale_hover)
-
 " Fix diff colors
 hi DiffAdd    gui=NONE guifg=NONE    guibg=#182a09
 hi DiffChange gui=NONE guifg=NONE    guibg=#0e1d25
@@ -456,6 +437,7 @@ set errorformat+=%f:\ line\ %l\\,\ col\ %c\\,\ %tarning\ -\ %m " ESLint warning
 " Define make programs
 autocmd FileType javascript setlocal makeprg=yarn\ run\ lint
 autocmd FileType typescript setlocal makeprg=yarn\ run\ lint
+autocmd FileType typescriptreact setlocal makeprg=yarn\ run\ lint
 
 " Org Mode
 "let g:org_todo_keywords = [['TODO(t)', 'IN_PROGRESS(p)', '|', 'DONE(d)']]
@@ -467,32 +449,15 @@ let g:NERDCustomDelimiters={
       \ 'javascript': { 'left': '//', 'right': '', 'leftAlt': '{/*', 'rightAlt': '*/}' },
       \}
 
-" VimR
-if has('gui_vimr')
-  " Switch tabs
-  nnoremap <S-D-{> :tabp<CR>
-  vnoremap <S-D-{> :tabp<CR>
-  inoremap <S-D-{> :tabp<CR>
-  nnoremap <S-D-}> :tabn<CR>
-  vnoremap <S-D-}> :tabn<CR>
-  inoremap <S-D-}> :tabn<CR>
-  " Save file
-  nnoremap <d-s> :w<CR>
-  inoremap <d-s> <C-o>:w<CR>
-  " Close current buffer/file
-  nnoremap <d-w> :q<CR>
-  inoremap <d-w> <C-o>:q<CR>
-endif
-
 " New tab
 nnoremap <M-t> :tabnew<CR>
 " Switch tabs
-nnoremap <M-{> :tabp<CR>
-vnoremap <M-{> :tabp<CR>
-inoremap <M-{> :tabp<CR>
-nnoremap <M-}> :tabn<CR>
-vnoremap <M-}> :tabn<CR>
-inoremap <M-}> :tabn<CR>
+nnoremap <M-S-[> :tabp<CR>
+vnoremap <M-S-[> :tabp<CR>
+inoremap <M-S-[> :tabp<CR>
+nnoremap <M-S-]> :tabn<CR>
+vnoremap <M-S-]> :tabn<CR>
+inoremap <M-S-]> :tabn<CR>
 " Close current buffer/file
 nnoremap <M-w> :q<CR>
 inoremap <M-w> <C-o>:q<CR>
@@ -532,30 +497,11 @@ lua << EOF
     }
 EOF
 
-" completion-nvim
-"autocmd BufEnter * lua require'completion'.on_attach()
-"set shortmess+=c
-"let g:completion_chain_complete_list = {
-    "\ 'default': [
-    "\    {'complete_items': ['tabnine']},
-    "\    {'complete_items': ['buffers']},
-    "\    {'mode': '<c-p>'},
-    "\    {'mode': '<c-n>'}
-    "\]
-"\}
-"let g:completion_matching_strategy_list = ['exact', 'substring', 'fuzzy', 'all']
-"let g:completion_confirm_key = ''
-"let g:completion_trigger_on_delete = 1
-
-"imap <c-j> <Plug>(completion_next_source)
-"imap <c-k> <Plug>(completion_prev_source)
-
 " Indent blankline
 " Workaround for https://github.com/neovim/neovim/issues/14209
 set colorcolumn=99999
 lua << EOF
-require('indent_blankline').setup {
-}
+require('indent_blankline').setup()
 EOF
 
 "lua << EOF
@@ -575,12 +521,26 @@ EOF
 let g:coq_settings = {
             \ 'auto_start': 'shut-up',
             \ 'display.pum.fast_close': v:false,
-            \ 'clients.tabnine.enabled': v:true,
+            \ 'clients.tabnine.enabled': v:false,
+            \ 'clients.tabnine.always_on_top': v:false,
             \ 'clients.snippets.enabled': v:false,
             \ 'clients.snippets.warn': [],
             \ 'clients.buffers.enabled': v:false,
+            \ 'clients.tags.enabled': v:false,
             \ 'display.ghost_text.enabled': v:false,
+            \ 'limits.completion_auto_timeout': 1,
+            \ 'limits.completion_manual_timeout': 2,
             \ 'display.icons.mode': 'none',
+            \ 'display.preview.border': [
+            \   ["", "NormalFloat"],
+            \   ["", "NormalFloat"],
+            \   ["", "NormalFloat"],
+            \   [" ", "NormalFloat"],
+            \   ["", "NormalFloat"],
+            \   ["", "NormalFloat"],
+            \   ["", "NormalFloat"],
+            \   [" ", "NormalFloat"]
+            \ ],
             \ 'keymap.jump_to_mark': '<c-s>',
             \ }
 
@@ -620,3 +580,135 @@ augroup dateformats
 augroup END
 
 let g:context_max_height = 2
+
+lua << EOF
+local coq = require "coq"
+require'lspconfig'.pyright.setup{}
+require'lspconfig'.tsserver.setup(coq.lsp_ensure_capabilities({}))
+require'lspconfig'.rust_analyzer.setup(coq.lsp_ensure_capabilities({
+    settings = {
+        ['rust-analyzer'] = {
+            files = {
+                excludeDirs = {
+                    ".venv",
+                    "ansible_collections",
+                    "pi",
+                }
+            }
+        }
+    }
+}))
+
+vim.keymap.set('n', '<leader>d', vim.diagnostic.open_float)
+vim.keymap.set('n', '[d', vim.diagnostic.goto_prev)
+vim.keymap.set('n', ']d', vim.diagnostic.goto_next)
+vim.keymap.set('n', '<leader>q', function()
+vim.diagnostic.setqflist({ severity = { min = vim.diagnostic.severity.WARN } })
+    end)
+
+vim.api.nvim_create_autocmd('LspAttach', {
+  group = vim.api.nvim_create_augroup('UserLspConfig', {}),
+  callback = function(ev)
+    local opts = { buffer = ev.buf }
+    vim.keymap.set('n', 'K', vim.lsp.buf.hover, opts)
+    vim.keymap.set('n', 'gd', vim.lsp.buf.definition, opts)
+    vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, opts)
+    vim.keymap.set('n', 'gr', vim.lsp.buf.references, opts)
+    vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, opts)
+    vim.keymap.set('n', '<leader>D', vim.lsp.buf.type_definition, opts)
+    vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, opts)
+    vim.keymap.set('n', '<leader>ca', vim.lsp.buf.code_action, opts)
+  end,
+})
+
+require'nvim-treesitter.configs'.setup {
+    ensure_installed = {
+        "c",
+        "lua",
+        "vim",
+        "query",
+        "rust",
+        "javascript",
+        "typescript",
+        "tsx"
+    },
+
+    highlight = {
+        enable = true,
+    },
+
+    incremental_selection = {
+        enable = true,
+    },
+
+    indent = {
+        enable = true,
+    },
+}
+
+-- lua =vim.treesitter.get_captures_at_cursor()
+vim.api.nvim_set_hl(0, "@variable", { link = "@text" })
+vim.api.nvim_set_hl(0, "@property", { link = "@text" })
+vim.api.nvim_set_hl(0, "TodoDate", { link = "@text" })
+vim.api.nvim_set_hl(0, "Pmenu", { link = "Folded" })
+
+-- Print highlights for cursor
+-- echo map(synstack(line('.'), col('.')), 'synIDattr(v:val, "name")')
+
+local null_ls = require("null-ls")
+
+null_ls.setup({
+    sources = {
+        null_ls.builtins.diagnostics.eslint_d,
+        null_ls.builtins.diagnostics.jsonlint,
+        null_ls.builtins.diagnostics.rubocop,
+        null_ls.builtins.formatting.eslint_d,
+        null_ls.builtins.formatting.prettierd,
+        null_ls.builtins.formatting.rustfmt,
+    },
+
+    on_attach = function(client, bufnr)
+        if client.supports_method("textDocument/formatting") then
+            vim.keymap.set("n", "<leader>f", function()
+                vim.lsp.buf.format({
+                    bufnr = vim.api.nvim_get_current_buf(),
+                    timeout_ms = 4000,
+                    filter = function(client)
+                        return client.name == "null-ls"
+                    end,
+                })
+                end,
+                { buffer = bufnr, desc = "[lsp] format" }
+            )
+        end
+    end,
+})
+
+require('iswap').setup{
+    flash_style = false,
+    move_cursor = true,
+}
+vim.keymap.set("n", "<leader>s", function()
+    vim.cmd("ISwapWithRight")
+end)
+vim.keymap.set("n", "<leader>S", function()
+    vim.cmd("ISwapWithLeft")
+end)
+
+require'treesitter-context'.setup{
+    enable = true,
+    line_numbers = false,
+    max_lines = 2,
+    trim_scope = 'inner',
+    mode = 'topline',
+}
+
+require"octo".setup({
+    picker = "fzf-lua"
+})
+
+require("supermaven-nvim").setup({
+    ignore_filetypes = { env = true, md = true, yml = true },
+})
+
+EOF
