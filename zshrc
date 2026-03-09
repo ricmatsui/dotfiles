@@ -1,34 +1,42 @@
+# ~/.zshrc
+#
+# source ~/synced/Projects/dotfiles/zshrc
+
 autoload -Uz vcs_info
 precmd() { vcs_info }
 zstyle ':vcs_info:git:*' formats '[%b] '
 
+unsetopt correct_all
+unsetopt correct
+
 ulimit -n 2048
+
+# Setup Homebrew
+eval "$(/opt/homebrew/bin/brew shellenv)"
+
+# Override to use GPGTools
+export PATH="/usr/local/MacGPG2/bin:$PATH"
 
 # Set up bin
 export PATH="$PATH:$HOME/.local/bin"
 export PATH="$PATH:$HOME/.cargo/bin"
+export PATH="$PATH:$HOME/go/bin"
+export PATH="$PATH:$HOME/synced/Projects/scripts"
 
 # Init GPG Agent passphrase prompt
 export GPG_TTY=$(tty)
 
 # Load z command
-source /usr/local/etc/profile.d/z.sh
+source "$HOMEBREW_PREFIX/etc/profile.d/z.sh"
 
-# Init nvm
-export NVM_DIR="$HOME/.nvm"
-[ -s "/usr/local/opt/nvm/nvm.sh" ] && . "/usr/local/opt/nvm/nvm.sh" --no-use  # This loads nvm
-[ -s "/usr/local/opt/nvm/etc/bash_completion.d/nvm" ] && . "/usr/local/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
+# Init asdf
+export PATH="$HOME/.asdf/shims:$PATH"
 
 # Init fnm
 eval "$(fnm env)"
 
 # Init rbenv
 eval "$(rbenv init -)"
-
-# Init pyenv
-export PYENV_ROOT="$HOME/.pyenv"
-export PATH="$PYENV_ROOT/bin:$PATH"
-eval "$(pyenv init -)"
 
 # Set pipenv venv
 export PIPENV_VENV_IN_PROJECT=1
@@ -40,6 +48,7 @@ export PATH=$PATH:$ANDROID_HOME/tools
 export PATH=$PATH:$ANDROID_HOME/tools/bin
 export PATH=$PATH:$ANDROID_HOME/platform-tools
 
+# Configure Java
 export JAVA_HOME=$(/usr/libexec/java_home)
 
 # Init direnv
@@ -64,6 +73,9 @@ setopt CORRECT
 setopt CORRECT_ALL
 
 # Shortcuts
+
+alias claude-personal="CLAUDE_CONFIG_DIR=~/.claude-personal claude"
+alias clp="claude-personal"
 
 # Docker
 alias dc='docker compose'
@@ -143,3 +155,7 @@ function set-term-title-precmd() {
 autoload -Uz add-zsh-hook
 add-zsh-hook preexec set-term-title-preexec
 add-zsh-hook precmd set-term-title-precmd
+
+# Set up completions
+autoload -Uz compinit
+compinit

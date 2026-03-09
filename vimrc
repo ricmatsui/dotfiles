@@ -11,10 +11,14 @@ set hlsearch
 set signcolumn=yes
 set cursorline
 
+" Use interactive shell to load profile
+set shell=/bin/zsh\ -i
+
 " Streamlit and React Native incompatibility
 set noswapfile
 
 " Do not auto-resize windows
+" Fix window size with :set wfw or wfh
 set noequalalways
 
 " Disable Macvim touchbar fullscreen button
@@ -67,13 +71,14 @@ Plug 'jxnblk/vim-mdx-js'               " MDX support
 Plug 'neovim/nvim-lspconfig'           " LSP support
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'} " Tree-sitter support
 Plug 'nvim-treesitter/nvim-treesitter-textobjects'
-Plug 'jose-elias-alvarez/null-ls.nvim', { 'branch': 'main' }
 Plug 'mizlan/iswap.nvim'
 Plug 'nvim-treesitter/nvim-treesitter-context'
 Plug 'nvim-tree/nvim-web-devicons'
 Plug 'ibhagwan/fzf-lua', {'branch': 'main'}
 Plug 'pwntester/octo.nvim'
 Plug 'supermaven-inc/supermaven-nvim', { 'branch': 'main' }
+Plug 'stevearc/conform.nvim'
+Plug 'mfussenegger/nvim-lint'
 
 "Disabled plugins
 "Plug 'terryma/vim-multiple-cursors'    " Multiple selection
@@ -108,6 +113,8 @@ Plug 'supermaven-inc/supermaven-nvim', { 'branch': 'main' }
 "Plug 'github/copilot.vim', { 'branch': 'release' }
 "Plug 'renerocksai/telekasten.nvim', { 'branch': 'main' } " No custom template, no unique file names
 "Plug 'jceb/vim-orgmode'                " Text outlining and task management
+"Plug 'jose-elias-alvarez/null-ls.nvim', { 'branch': 'main' }
+"Plug 'stevearc/oil.nvim' " Some compatibility issue?
 
 "Future plugins
 "https://github.com/AckslD/nvim-neoclip.lua
@@ -145,6 +152,11 @@ if has('termguicolors') && &termguicolors
 endif
 
 set autoindent
+
+" Custom spell file
+set spellfile=~/synced/Projects/vim/spell/en.utf-8.add
+
+nnoremap <leader>t 1z=
 
 autocmd BufRead,BufNewFile *.md setlocal spell
 
@@ -335,6 +347,9 @@ nnoremap <silent> <c-j> :wincmd j<CR>
 nnoremap <silent> <c-h> :wincmd h<CR>
 nnoremap <silent> <c-l> :wincmd l<CR>
 
+" Skip adding paragraph motions to the jumplist
+nnoremap <silent> { :keepjumps normal! {<CR>
+nnoremap <silent> } :keepjumps normal! }<CR>
 
 " Highlight current line, map toggle for current column highlight
 " \ch - Toggle column highlight
@@ -438,6 +453,7 @@ set errorformat+=%f:\ line\ %l\\,\ col\ %c\\,\ %tarning\ -\ %m " ESLint warning
 autocmd FileType javascript setlocal makeprg=yarn\ run\ lint
 autocmd FileType typescript setlocal makeprg=yarn\ run\ lint
 autocmd FileType typescriptreact setlocal makeprg=yarn\ run\ lint
+autocmd FileType rust setlocal makeprg=NO_COLOR=1\ cargo\ run
 
 " Org Mode
 "let g:org_todo_keywords = [['TODO(t)', 'IN_PROGRESS(p)', '|', 'DONE(d)']]
@@ -467,6 +483,8 @@ command! FormatJSON %!jq .
 
 " Async make command
 command! -bang -nargs=* -complete=file Make AsyncRun -program=make @ <args>
+
+nnoremap <F5> :Make<CR>
 
 " Async Run - automatically open quickfix with 8 lines visible
 let g:asyncrun_open = 8
@@ -583,8 +601,21 @@ let g:context_max_height = 2
 
 lua << EOF
 local coq = require "coq"
+local util = require "lspconfig.util"
+require'lspconfig'.astro.setup(coq.lsp_ensure_capabilities({}))
+require'lspconfig'.denols.setup(coq.lsp_ensure_capabilities({
+    root_dir = util.root_pattern("deno.json", "deno.jsonc"),
+}))
 require'lspconfig'.pyright.setup{}
-require'lspconfig'.tsserver.setup(coq.lsp_ensure_capabilities({}))
+require'lspconfig'.ts_ls.setup(coq.lsp_ensure_capabilities({
+    root_dir = function(fname)
+        if util.root_pattern("deno.json", "deno.jsonc")(fname) then
+            return nil
+        end
+        return util.root_pattern("package.json", "tsconfig.json", "jsconfig.json")(fname)
+    end,
+    single_file_support = false,
+}))
 require'lspconfig'.rust_analyzer.setup(coq.lsp_ensure_capabilities({
     settings = {
         ['rust-analyzer'] = {
@@ -599,9 +630,21 @@ require'lspconfig'.rust_analyzer.setup(coq.lsp_ensure_capabilities({
     }
 }))
 
+vim.g.markdown_fenced_languages = {
+  "ts=typescript"
+}
+
 vim.keymap.set('n', '<leader>d', vim.diagnostic.open_float)
-vim.keymap.set('n', '[d', vim.diagnostic.goto_prev)
-vim.keymap.set('n', ']d', vim.diagnostic.goto_next)
+vim.keymap.set('n', '[d', function()
+    vim.diagnostic.goto_prev({
+        severity = { min = vim.diagnostic.severity.INFO }
+    })
+end)
+vim.keymap.set('n', ']d', function()
+    vim.diagnostic.goto_next({
+        severity = { min = vim.diagnostic.severity.INFO }
+    })
+end)
 vim.keymap.set('n', '<leader>q', function()
 vim.diagnostic.setqflist({ severity = { min = vim.diagnostic.severity.WARN } })
     end)
@@ -623,6 +666,7 @@ vim.api.nvim_create_autocmd('LspAttach', {
 
 require'nvim-treesitter.configs'.setup {
     ensure_installed = {
+        "astro",
         "c",
         "lua",
         "vim",
@@ -655,33 +699,33 @@ vim.api.nvim_set_hl(0, "Pmenu", { link = "Folded" })
 -- Print highlights for cursor
 -- echo map(synstack(line('.'), col('.')), 'synIDattr(v:val, "name")')
 
-local null_ls = require("null-ls")
-
-null_ls.setup({
-    sources = {
-        null_ls.builtins.diagnostics.eslint_d,
-        null_ls.builtins.diagnostics.jsonlint,
-        null_ls.builtins.diagnostics.rubocop,
-        null_ls.builtins.formatting.eslint_d,
-        null_ls.builtins.formatting.prettierd,
-        null_ls.builtins.formatting.rustfmt,
+require("conform").setup({
+    formatters_by_ft = {
+        astro = { "eslint_d", "prettier" },
+        rust = { "rustfmt" },
+        javascript = { "eslint_d", "prettier" },
+        javascriptreact = { "eslint_d", "prettier" },
+        json = { "prettier" },
+        typescript = { "eslint_d", "prettier" },
+        typescriptreact = { "eslint_d", "prettier" },
     },
+})
 
-    on_attach = function(client, bufnr)
-        if client.supports_method("textDocument/formatting") then
-            vim.keymap.set("n", "<leader>f", function()
-                vim.lsp.buf.format({
-                    bufnr = vim.api.nvim_get_current_buf(),
-                    timeout_ms = 4000,
-                    filter = function(client)
-                        return client.name == "null-ls"
-                    end,
-                })
-                end,
-                { buffer = bufnr, desc = "[lsp] format" }
-            )
-        end
-    end,
+vim.keymap.set("n", "<leader>f", function()
+    require("conform").format({ async = true })
+end, { desc = "Conform: format" })
+
+require('lint').linters_by_ft = {
+  javascript = {'eslint_d'},
+  javascriptreact = {'eslint_d'},
+  typescript = {'eslint_d'},
+  typescriptreact = {'eslint_d'},
+}
+
+vim.api.nvim_create_autocmd({ "BufReadPost", "BufWritePost" }, {
+  callback = function()
+    require("lint").try_lint()
+  end
 })
 
 require('iswap').setup{

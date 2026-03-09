@@ -1,4 +1,5 @@
-# gitconfig
+# .gitconfig
+#
 # [include]
 #     path = ~/synced/Projects/dotfiles/gitconfig.inc
 

@@ -4,6 +4,7 @@ echo "source '$(pwd)/zshrc'" >> ~/.zshrc
 
 brew install gh nvim ripgrep
 yarn global add eslint_d @fsouza/prettierd
+pip3 install neovim --break-system-packages --user
 
 curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
     https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
@@ -16,3 +17,8 @@ cp init.vim ~/.config/nvim
 mkdir -p ~/.cache/nvim
 
 nvim -es -u init.vim -i NONE -c "PlugInstall" -c "qa"
+
+cargo install --git https://github.com/itmettkeDE/cargo-patch
+cargo install cargo-make
+cargo install cargo-watch
+cargo install runcc

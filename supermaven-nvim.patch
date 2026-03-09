@@ -1,0 +1,17 @@
+diff --git a/lua/supermaven-nvim/completion_preview.lua b/lua/supermaven-nvim/completion_preview.lua
+index 382ea98..3cff730 100644
+--- a/lua/supermaven-nvim/completion_preview.lua
++++ b/lua/supermaven-nvim/completion_preview.lua
+@@ -78,9 +78,9 @@ function CompletionPreview:render_standard(first_line, other_lines, opts, buf)
+   if first_line ~= "" then
+     opts.virt_text = { { first_line, self.suggestion_group } }
+   end
+-  if #other_lines > 0 then
+-    opts.virt_lines = other_lines
+-  end
++--  if #other_lines > 0 then
++--    opts.virt_lines = other_lines
++--  end
+ 
+   opts.virt_text_win_col = vim.fn.virtcol(".") - 1
+ 
