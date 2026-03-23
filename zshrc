@@ -29,6 +29,9 @@ export GPG_TTY=$(tty)
 # Load z command
 source "$HOMEBREW_PREFIX/etc/profile.d/z.sh"
 
+# Init mise
+eval "$(mise activate zsh)"
+
 # Init asdf
 export PATH="$HOME/.asdf/shims:$PATH"
 

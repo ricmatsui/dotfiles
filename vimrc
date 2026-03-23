@@ -668,13 +668,15 @@ require'nvim-treesitter.configs'.setup {
     ensure_installed = {
         "astro",
         "c",
+        "elixir",
         "lua",
         "vim",
         "query",
         "rust",
         "javascript",
         "typescript",
-        "tsx"
+        "tsx",
+        "heex"
     },
 
     highlight = {
