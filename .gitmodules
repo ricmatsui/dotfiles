@@ -1,3 +1,6 @@
 [submodule "env"]
 	path = env
 	url = ./dotfiles-env.git
+[submodule "kitty-tab-switcher"]
+	path = kitty-tab-switcher
+	url = https://github.com/ricmatsui/kitty-tab-switcher

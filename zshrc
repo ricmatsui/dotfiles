@@ -77,6 +77,7 @@ setopt CORRECT_ALL
 
 # Shortcuts
 
+alias cl="claude"
 alias claude-personal="CLAUDE_CONFIG_DIR=~/.claude-personal claude"
 alias clp="claude-personal"
 

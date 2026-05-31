@@ -1,0 +1,33 @@
+" ~/.vimrc
+"
+" source ~/synced/Projects/dotfiles/vim/vimrc
+
+let s:config_dir = expand('<sfile>:p:h')
+
+execute 'source' s:config_dir . '/config/plugins.vim'
+execute 'source' s:config_dir . '/config/general.vim'
+execute 'source' s:config_dir . '/config/colors.vim'
+execute 'source' s:config_dir . '/config/startify.vim'
+execute 'source' s:config_dir . '/config/airline.vim'
+execute 'source' s:config_dir . '/config/taboo.vim'
+execute 'source' s:config_dir . '/config/easy_align.vim'
+execute 'source' s:config_dir . '/config/gundo.vim'
+execute 'source' s:config_dir . '/config/netrw.vim'
+execute 'source' s:config_dir . '/config/markdown.vim'
+execute 'source' s:config_dir . '/config/pymode.vim'
+execute 'source' s:config_dir . '/config/folding.vim'
+execute 'source' s:config_dir . '/config/ack.vim'
+execute 'source' s:config_dir . '/config/switch.vim'
+execute 'source' s:config_dir . '/config/ctrlp.vim'
+execute 'source' s:config_dir . '/config/auto_save.vim'
+execute 'source' s:config_dir . '/config/git.vim'
+execute 'source' s:config_dir . '/config/github.vim'
+execute 'source' s:config_dir . '/config/snippets.vim'
+execute 'source' s:config_dir . '/config/editor_config.vim'
+execute 'source' s:config_dir . '/config/nerd_commenter.vim'
+execute 'source' s:config_dir . '/config/tabs.vim'
+execute 'source' s:config_dir . '/config/make.vim'
+execute 'source' s:config_dir . '/config/coq.vim'
+execute 'source' s:config_dir . '/config/vimwiki.vim'
+execute 'source' s:config_dir . '/config/zettel.vim'
+execute 'source' s:config_dir . '/config/speeddating.vim'
