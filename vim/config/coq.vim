@@ -1,5 +1,6 @@
 let g:coq_settings = {
             \ 'auto_start': 'shut-up',
+            \ 'completion.always': v:false,
             \ 'display.pum.fast_close': v:false,
             \ 'clients.tabnine.enabled': v:false,
             \ 'clients.tabnine.always_on_top': v:false,

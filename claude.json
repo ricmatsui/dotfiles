@@ -1,5 +1,121 @@
 {
-  "model": "opus",
+  "permissions": {
+    "allow": [
+      "Read",
+      "Bash(pnpm:*)",
+      "Bash(npm:*)",
+      "Bash(node:*)",
+      "Bash(mix:*)",
+      "Bash(elixir:*)",
+      "Bash(iex:*)",
+      "Bash(git:*)",
+      "Bash(docker:*)",
+      "Bash(docker-compose:*)",
+      "Bash(ls:*)",
+      "Bash(pwd:*)",
+      "Bash(cd:*)",
+      "Bash(mkdir:*)",
+      "Bash(rm:*)",
+      "Bash(cp:*)",
+      "Bash(mv:*)",
+      "Bash(cat:*)",
+      "Bash(head:*)",
+      "Bash(tail:*)",
+      "Bash(grep:*)",
+      "Bash(find:*)",
+      "Bash(which:*)",
+      "Bash(echo:*)",
+      "Bash(touch:*)",
+      "Bash(chmod:*)",
+      "Bash(curl:*)",
+      "Bash(wget:*)",
+      "Bash(mongosh:*)",
+      "Bash(psql:*)",
+      "Bash(redis-cli:*)",
+      "Bash(vitest:*)",
+      "Bash(jest:*)",
+      "Bash(mocha:*)",
+      "Bash(cypress:*)",
+      "Bash(eslint:*)",
+      "Bash(prettier:*)",
+      "Bash(tsc:*)",
+      "Bash(vite:*)",
+      "Bash(esbuild:*)",
+      "Bash(fly:*)",
+      "Bash(flyctl:*)",
+      "Bash(env:*)",
+      "Bash(export:*)",
+      "Bash(source:*)",
+      "Bash(wc:*)",
+      "Bash(sort:*)",
+      "Bash(uniq:*)",
+      "Bash(diff:*)",
+      "Bash(tree:*)",
+      "Bash(xargs:*)",
+      "Bash(sed:*)",
+      "Bash(awk:*)",
+      "Bash(jq:*)",
+      "Bash(ping:*)",
+      "Bash(nc:*)",
+      "Bash(lsof:*)",
+      "Bash(ps:*)",
+      "Bash(kill:*)",
+      "Bash(pkill:*)",
+      "Bash(./scripts/*:*)",
+      "Bash(./setup:*)",
+      "Skill(working-with-authentication)",
+      "Skill(working-with-kuali-authorization)",
+      "Skill(working-with-fly-infrastructure)",
+      "Skill(working-with-new-rules-gadget)",
+      "Skill(using-superpowers)",
+      "Skill(superpowers:using-superpowers)",
+      "Skill(superpowers:brainstorming)"
+    ],
+    "deny": [
+      "Bash(sops:*)",
+      "Bash(git push --force:*)",
+      "Bash(git push -f:*)",
+      "Bash(git push origin --force:*)",
+      "Bash(git push origin -f:*)",
+      "Bash(git reset --hard:*)",
+      "Bash(git clean -f:*)",
+      "Bash(git clean -fd:*)",
+      "Bash(git clean -fdx:*)",
+      "Bash(git checkout -- .:*)",
+      "Bash(git branch -D:*)",
+      "Bash(git reflog expire:*)",
+      "Bash(git gc --prune:*)",
+      "Bash(git stash drop:*)",
+      "Bash(git stash clear:*)",
+      "Read(**/build.service.json5)",
+      "Edit(**/build.service.json5)",
+      "Write(**/build.service.json5)",
+      "Edit(**/.env)",
+      "Edit(**/.env.*)",
+      "Edit(**/*credentials*.json)",
+      "Edit(**/*secrets*.json)",
+      "Edit(**/*.pem)",
+      "Edit(**/*.key)",
+      "Edit(**/id_rsa*)",
+      "Edit(**/.npmrc)",
+      "Edit(**/.netrc)",
+      "Write(**/.env)",
+      "Write(**/.env.*)",
+      "Write(**/*credentials*.json)",
+      "Write(**/*secrets*.json)",
+      "Write(**/*.pem)",
+      "Write(**/*.key)",
+      "Write(**/id_rsa*)",
+      "Write(**/.npmrc)",
+      "Write(**/.netrc)",
+      "Read(specs/archive/**)",
+      "Edit(specs/archive/**)",
+      "Write(specs/archive/**)",
+      "Glob(specs/archive/**)"
+    ],
+    "defaultMode": "auto"
+  },
+  "model": "opus[1m]",
   "hooks": {
     "Notification": [
       {
@@ -49,6 +165,15 @@
             "command": "echo \"$KITTY_WINDOW_ID clear\" >> /tmp/claude.log"
           }
         ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash ~/synced/Projects/dotfiles/claude-block-sops.sh"
+          }
+        ]
       }
     ],
     "SessionEnd": [
@@ -72,12 +197,19 @@
     "superpowers@claude-plugins-official": true,
     "typescript-lsp@claude-plugins-official": true,
     "frontend-design@claude-plugins-official": true,
-    "rust-analyzer-lsp@claude-plugins-official": true
+    "rust-analyzer-lsp@claude-plugins-official": true,
+    "swift-lsp@claude-plugins-official": true
   },
   "spinnerVerbs": {
     "mode": "replace",
     "verbs": [
       "Working"
     ]
-  }
+  },
+  "effortLevel": "high",
+  "tui": "fullscreen",
+  "editorMode": "vim",
+  "agentPushNotifEnabled": true,
+  "skipAutoPermissionPrompt": true,
+  "voiceEnabled": true
 }

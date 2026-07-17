@@ -56,8 +56,8 @@ set mouse=a
 set number relativenumber
 
 " Use normal alerts rather than UI alerts for errors
-set guioptions=
-set guioptions+=c
+"set guioptions=
+"set guioptions+=c
 
 runtime macros/matchit.vim
 

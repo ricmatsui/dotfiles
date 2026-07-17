@@ -29,14 +29,18 @@ export GPG_TTY=$(tty)
 # Load z command
 source "$HOMEBREW_PREFIX/etc/profile.d/z.sh"
 
-# Init mise
-eval "$(mise activate zsh)"
-
 # Init asdf
 export PATH="$HOME/.asdf/shims:$PATH"
 
 # Init fnm
 eval "$(fnm env)"
+
+# Init mise
+eval "$(mise activate zsh)"
+
+export PNPM_HOME="$HOME/Library/pnpm"
+export PATH="$HOME/Library/pnpm:$PATH"
+export PATH="$HOME/Library/pnpm/bin:$PATH"
 
 # Init rbenv
 eval "$(rbenv init -)"

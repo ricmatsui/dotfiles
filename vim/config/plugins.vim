@@ -43,7 +43,7 @@ Plug 'takemon-go/dotd'                 " Date completion
 Plug 'tikhomirov/vim-glsl'             " GLSL support
 Plug 'jxnblk/vim-mdx-js'               " MDX support
 Plug 'neovim/nvim-lspconfig'           " LSP support
-Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'} " Tree-sitter support
+Plug 'nvim-treesitter/nvim-treesitter', {'branch': 'main', 'do': ':TSUpdate'} " Tree-sitter support
 Plug 'nvim-treesitter/nvim-treesitter-textobjects'
 Plug 'mizlan/iswap.nvim'
 Plug 'nvim-treesitter/nvim-treesitter-context'
@@ -53,6 +53,10 @@ Plug 'pwntester/octo.nvim'
 Plug 'supermaven-inc/supermaven-nvim', { 'branch': 'main' }
 Plug 'stevearc/conform.nvim'
 Plug 'mfussenegger/nvim-lint'
+Plug 'nvim-tree/nvim-web-devicons'
+Plug 'nvim-telescope/telescope.nvim'
+Plug 'nvim-telescope/telescope-fzf-native.nvim', { 'do': 'make' }
+Plug 'https://codeberg.org/LukasPietzschmann/telescope-tabs'
 
 "Disabled plugins
 "Plug 'terryma/vim-multiple-cursors'    " Multiple selection
