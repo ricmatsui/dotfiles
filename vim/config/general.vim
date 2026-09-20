@@ -8,6 +8,8 @@ set shiftwidth=4
 set virtualedit=onemore
 set noincsearch
 set hlsearch
+set ignorecase
+set smartcase
 set signcolumn=yes
 set cursorline
 
@@ -70,6 +72,10 @@ nnoremap <silent> <c-l> :wincmd l<CR>
 " Skip adding paragraph motions to the jumplist
 nnoremap <silent> { :keepjumps normal! {<CR>
 nnoremap <silent> } :keepjumps normal! }<CR>
+
+" Add counted line motions to the jumplist so <c-o> returns
+nnoremap <expr> j (v:count > 1 ? "m'" . v:count : '') . 'j'
+nnoremap <expr> k (v:count > 1 ? "m'" . v:count : '') . 'k'
 
 " Highlight current line, map toggle for current column highlight
 " \ch - Toggle column highlight

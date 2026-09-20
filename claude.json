@@ -89,7 +89,6 @@
       "Bash(git stash clear:*)",
       "Read(**/build.service.json5)",
       "Edit(**/build.service.json5)",
-      "Write(**/build.service.json5)",
       "Edit(**/.env)",
       "Edit(**/.env.*)",
       "Edit(**/*credentials*.json)",
@@ -99,19 +98,8 @@
       "Edit(**/id_rsa*)",
       "Edit(**/.npmrc)",
       "Edit(**/.netrc)",
-      "Write(**/.env)",
-      "Write(**/.env.*)",
-      "Write(**/*credentials*.json)",
-      "Write(**/*secrets*.json)",
-      "Write(**/*.pem)",
-      "Write(**/*.key)",
-      "Write(**/id_rsa*)",
-      "Write(**/.npmrc)",
-      "Write(**/.netrc)",
       "Read(specs/archive/**)",
-      "Edit(specs/archive/**)",
-      "Write(specs/archive/**)",
-      "Glob(specs/archive/**)"
+      "Edit(specs/archive/**)"
     ],
     "defaultMode": "auto"
   },
@@ -155,6 +143,14 @@
             "command": "echo \"$KITTY_WINDOW_ID clear\" >> /tmp/claude.log"
           }
         ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash ~/synced/Projects/dotfiles/claude-session-name.sh --hook"
+          }
+        ]
       }
     ],
     "PreToolUse": [
@@ -189,7 +185,8 @@
   },
   "statusLine": {
     "type": "command",
-    "command": "bash ~/synced/Projects/dotfiles/claude-statusline-command.sh"
+    "command": "bash ~/synced/Projects/dotfiles/claude-statusline-command.sh",
+    "refreshInterval": 30
   },
   "enabledPlugins": {
     "context7@claude-plugins-official": true,
@@ -198,7 +195,16 @@
     "typescript-lsp@claude-plugins-official": true,
     "frontend-design@claude-plugins-official": true,
     "rust-analyzer-lsp@claude-plugins-official": true,
-    "swift-lsp@claude-plugins-official": true
+    "swift-lsp@claude-plugins-official": true,
+    "plannotator@plannotator": true
+  },
+  "extraKnownMarketplaces": {
+    "plannotator": {
+      "source": {
+        "source": "github",
+        "repo": "backnotprop/plannotator"
+      }
+    }
   },
   "spinnerVerbs": {
     "mode": "replace",
@@ -209,7 +215,9 @@
   "effortLevel": "high",
   "tui": "fullscreen",
   "editorMode": "vim",
+  "autoCompactEnabled": true,
   "agentPushNotifEnabled": true,
   "skipAutoPermissionPrompt": true,
-  "voiceEnabled": true
+  "voiceEnabled": true,
+  "remoteControlAtStartup": true
 }

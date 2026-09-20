@@ -53,6 +53,27 @@ let g:airline#extensions#tabline#show_splits = 0
 let g:airline#extensions#tabline#show_tab_count = 0
 let g:airline#extensions#tabline#fnamemod = ':t'
 
+" Name tabs whose buffer name ends in a slash (Dirvish directories, the Fugitive
+" status buffer). Both taboo's %f and airline's fnamemod take the path tail,
+" which is empty for those, and airline drops a tab entirely when its title is
+" empty. Returning '' defers to airline's own naming.
+function! AirlineTabTitle(n) abort
+    " Pick the buffer airline's own fallback would name: the first listed
+    " buffer in the tab, not the active window's.
+    let buflist = tabpagebuflist(a:n)
+    let all = airline#extensions#tabline#buflist#list()
+    let listed = filter(copy(buflist), 'index(all, v:val) != -1')
+    let name = bufname(empty(listed) ? buflist[0] : listed[0])
+    if name !~# '[\\/]$'
+        return ''
+    endif
+    if name =~# '^fugitive://'
+        return fnamemodify(matchstr(name, '^fugitive://\zs.\{-}\ze/\.git'), ':t') . ' [git]'
+    endif
+    return fnamemodify(name, ':h:t') . '/'
+endfunction
+let g:airline#extensions#tabline#tabtitle_formatter = 'AirlineTabTitle'
+
 let g:airline#extensions#hunks#non_zero_only = 1
 
 " Airline theme improvements

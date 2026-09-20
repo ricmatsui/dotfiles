@@ -22,6 +22,7 @@ export PATH="$PATH:$HOME/.local/bin"
 export PATH="$PATH:$HOME/.cargo/bin"
 export PATH="$PATH:$HOME/go/bin"
 export PATH="$PATH:$HOME/synced/Projects/scripts"
+export PATH="$HOMEBREW_PREFIX/opt/ffmpeg-full/bin:$PATH"
 
 # Init GPG Agent passphrase prompt
 export GPG_TTY=$(tty)
@@ -84,6 +85,24 @@ setopt CORRECT_ALL
 alias cl="claude"
 alias claude-personal="CLAUDE_CONFIG_DIR=~/.claude-personal claude"
 alias clp="claude-personal"
+
+# Name a new session before its first prompt. `/rename <name>` runs locally (no
+# model turn) and is the only path that writes the name to both the session
+# registry, which /list-agents reads, and the transcript, which the /resume
+# picker reads -- a SessionStart hook reaches neither. Invocations carrying
+# their own arguments (a prompt, --resume, -p) pass through untouched and fall
+# back to the UserPromptSubmit hook in claude.json.
+claude() {
+  if (( $# == 0 )); then
+    local name
+    name=$(~/synced/Projects/dotfiles/claude-session-name.sh) || name=""
+    if [[ -n $name ]]; then
+      command claude "/rename $name"
+      return
+    fi
+  fi
+  command claude "$@"
+}
 
 # Docker
 alias dc='docker compose'

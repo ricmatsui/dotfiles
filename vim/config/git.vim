@@ -4,7 +4,7 @@
 " \gc  - git commit
 " \gp  - git push
 " \gca  - git commit all
-nmap <leader>gs :Git<CR>
+nmap <leader>gs :topleft vertical Git<CR>
 nmap <leader>gd :Gdiff<CR>
 nmap <leader>gc :Gcommit<CR>
 nmap <leader>gp :Gpush<CR>

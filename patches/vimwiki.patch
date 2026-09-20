@@ -1,0 +1,22 @@
+diff --git a/autoload/vimwiki/base.vim b/autoload/vimwiki/base.vim
+index 30d49fb..1230377 100644
+--- a/autoload/vimwiki/base.vim
++++ b/autoload/vimwiki/base.vim
+@@ -1720,13 +1720,11 @@ function! vimwiki#base#follow_link(split, ...) abort
+         let cmd = 'tab drop'
+       endif
+     else
+-      " Same as above - doing this by default reduces incidence of multiple
+-      " tabs with the same file.  We default to :e just in case :drop doesn't
+-      " exist in the current build.
++      " Patched: always open in the current window. Upstream prefers :drop
++      " when available, which steals focus to a window or tab page that
++      " already shows the target instead of opening it where you followed
++      " the link from.
+       let cmd = 'edit'
+-      if exists(':drop') == 2 && has('windows')
+-        let cmd = 'drop'
+-      endif
+     endif
+ 
+     " if we want to and can reuse a split window, jump to that window and open
