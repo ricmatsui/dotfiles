@@ -7,3 +7,7 @@ let g:startify_lists = [
       \ { 'type': 'sessions',  'header': ['   Sessions']       },
       \ ]
 
+" Save only what's on screen; hidden buffers otherwise accumulate forever
+set sessionoptions-=buffers
+set sessionoptions-=blank
+set sessionoptions-=terminal
