@@ -11,3 +11,4 @@ let g:startify_lists = [
 set sessionoptions-=buffers
 set sessionoptions-=blank
 set sessionoptions-=terminal
+set sessionoptions-=folds

@@ -11,7 +11,7 @@ let g:vimwiki_listsyms = ' .X'
 let g:vimwiki_key_mappings = {
             \ 'headers': 0,
             \ }
-"let g:vimwiki_folding = 'list'
+let g:vimwiki_folding = 'expr'
 hi! link VimwikiCheckBoxDone Title
 nmap <Leader>ws <Plug>VimwikiSplitLink
 nmap <Leader>wv <Plug>VimwikiVSplitLink
@@ -26,4 +26,11 @@ augroup vimwiki_header_motions
     autocmd FileType vimwiki nmap <buffer> [[ <Plug>VimwikiGoToPrevHeader
     autocmd FileType vimwiki nmap <buffer> ]= <Plug>VimwikiGoToNextSiblingHeader
     autocmd FileType vimwiki nmap <buffer> [= <Plug>VimwikiGoToPrevSiblingHeader
+augroup END
+
+" Vimwiki only maps gl (remove checkbox) in normal mode; the command already
+" takes a range, so map it in visual mode too.
+augroup vimwiki_remove_checkbox
+    autocmd!
+    autocmd FileType vimwiki xmap <buffer> gl <Plug>VimwikiRemoveSingleCB
 augroup END
