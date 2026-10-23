@@ -5,6 +5,8 @@
 autoload -Uz vcs_info
 precmd() { vcs_info }
 zstyle ':vcs_info:git:*' formats '[%b] '
+zstyle ':vcs_info:git+set-message:*' hooks bare-dot
++vi-bare-dot() { [[ $(git rev-parse --is-bare-repository 2>/dev/null) == true ]] && hook_com[branch]=.; return 0 }
 
 unsetopt correct_all
 unsetopt correct
@@ -85,6 +87,8 @@ setopt CORRECT_ALL
 alias cl="claude"
 alias claude-personal="CLAUDE_CONFIG_DIR=~/.claude-personal claude"
 alias clp="claude-personal"
+alias clm="CLAUDE_CONFIG_DIR=~/.claude claude-memories"
+alias clpm="CLAUDE_CONFIG_DIR=~/.claude-personal claude-memories"
 
 # Name a new session before its first prompt. `/rename <name>` runs locally (no
 # model turn) and is the only path that writes the name to both the session
@@ -102,6 +106,15 @@ claude() {
     fi
   fi
   command claude "$@"
+}
+
+# cd into Claude's auto-memory for this project, under $CLAUDE_CONFIG_DIR.
+# Claude keys project dirs by the git root (cwd outside a repo) with
+# non-alphanumerics as dashes.
+claude-memories() {
+  local root
+  root=$(git rev-parse --show-toplevel 2>/dev/null) || root=$PWD
+  cd ${CLAUDE_CONFIG_DIR:-~/.claude}/projects/${root//[^a-zA-Z0-9]/-}/memory
 }
 
 # Docker

@@ -8,8 +8,12 @@ reset=$'\e[0m'
 cwd=$(echo "$input" | jq -r '.workspace.current_dir // .cwd // ""')
 dir=$(basename "$cwd")
 
-branch=$(git -C "$cwd" --no-optional-locks symbolic-ref --short HEAD 2>/dev/null \
-  || git -C "$cwd" --no-optional-locks describe --all HEAD 2>/dev/null)
+if [ "$(git -C "$cwd" rev-parse --is-bare-repository 2>/dev/null)" = true ]; then
+    branch="."
+else
+    branch=$(git -C "$cwd" --no-optional-locks symbolic-ref --short HEAD 2>/dev/null \
+      || git -C "$cwd" --no-optional-locks describe --all HEAD 2>/dev/null)
+fi
 
 if [ -n "$branch" ]; then
     branch_part="[$branch] "
