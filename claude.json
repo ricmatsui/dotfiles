@@ -73,6 +73,7 @@
     ],
     "deny": [
       "Bash(sops:*)",
+      "Bash(screencapture:*)",
       "Bash(git push --force:*)",
       "Bash(git push -f:*)",
       "Bash(git push origin --force:*)",
@@ -105,45 +106,7 @@
   },
   "model": "opus[1m]",
   "hooks": {
-    "Notification": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "echo \"$KITTY_WINDOW_ID notification\" >> /tmp/claude.log"
-          }
-        ]
-      }
-    ],
-    "PermissionRequest": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "echo \"$KITTY_WINDOW_ID permission\" >> /tmp/claude.log"
-          }
-        ]
-      }
-    ],
-    "Stop": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "echo \"$KITTY_WINDOW_ID stop\" >> /tmp/claude.log"
-          }
-        ]
-      }
-    ],
     "UserPromptSubmit": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "echo \"$KITTY_WINDOW_ID clear\" >> /tmp/claude.log"
-          }
-        ]
-      },
       {
         "hooks": [
           {
@@ -155,29 +118,11 @@
     ],
     "PreToolUse": [
       {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "echo \"$KITTY_WINDOW_ID clear\" >> /tmp/claude.log"
-          }
-        ]
-      },
-      {
         "matcher": "Bash",
         "hooks": [
           {
             "type": "command",
-            "command": "bash ~/synced/Projects/dotfiles/claude-block-sops.sh"
-          }
-        ]
-      }
-    ],
-    "SessionEnd": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "echo \"$KITTY_WINDOW_ID clear\" >> /tmp/claude.log"
+            "command": "bash ~/synced/Projects/dotfiles/claude-block-commands.sh"
           }
         ]
       }

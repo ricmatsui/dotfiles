@@ -32,7 +32,7 @@ Plug 'direnv/direnv.vim'               " Direnv support
 Plug 'gcmt/taboo.vim'                  " Tab renaming
 Plug 'skywind3000/asyncrun.vim'        " Async Run
 Plug 'tpope/vim-repeat'                " Repeat for plugin commands
-Plug 'tversteeg/registers.nvim', { 'branch': 'main' } " Show vim register values
+Plug 'happy663/registers.nvim', { 'branch': 'main' } " Show vim register values
 Plug 'lukas-reineke/indent-blankline.nvim', { 'tag': 'v2.20.8' } " Indent guides
 Plug 'ms-jpq/coq_nvim', {'branch': 'coq'} " Autocompletion
 Plug 'vimwiki/vimwiki'                 " Wiki

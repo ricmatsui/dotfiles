@@ -1,14 +1,12 @@
-local coq = require "coq"
+vim.lsp.config('astro', {})
 
-vim.lsp.config('astro', coq.lsp_ensure_capabilities({}))
-
-vim.lsp.config('denols', coq.lsp_ensure_capabilities({
+vim.lsp.config('denols', {
     root_markers = { 'deno.json', 'deno.jsonc' },
-}))
+})
 
 vim.lsp.config('pyright', {})
 
-vim.lsp.config('ts_ls', coq.lsp_ensure_capabilities({
+vim.lsp.config('ts_ls', {
     root_dir = function(bufnr, on_dir)
         if vim.fs.root(bufnr, { 'deno.json', 'deno.jsonc' }) then
             return
@@ -18,9 +16,9 @@ vim.lsp.config('ts_ls', coq.lsp_ensure_capabilities({
             on_dir(dir)
         end
     end,
-}))
+})
 
-vim.lsp.config('rust_analyzer', coq.lsp_ensure_capabilities({
+vim.lsp.config('rust_analyzer', {
     settings = {
         ['rust-analyzer'] = {
             files = {
@@ -32,9 +30,11 @@ vim.lsp.config('rust_analyzer', coq.lsp_ensure_capabilities({
             }
         }
     }
-}))
+})
 
-vim.lsp.enable({ 'astro', 'denols', 'pyright', 'ts_ls', 'rust_analyzer' })
+vim.lsp.config('expert', {})
+
+vim.lsp.enable({ 'astro', 'denols', 'pyright', 'ts_ls', 'rust_analyzer', 'expert' })
 
 vim.g.markdown_fenced_languages = {
   "ts=typescript"
